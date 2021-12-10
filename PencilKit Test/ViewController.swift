@@ -19,20 +19,18 @@ class ViewController: UIViewController {
     }
 
     func setupPencilKit() {
-        let CanvasView = PKCanvasView(frame: self.view.bounds)
-
+        let canvasView = PKCanvasView(frame: self.view.bounds)
+        canvasView.delegate = self
 //        canvasView.drawingPolicy = .anyInput  // uncomment to test on anyput
 //        let toolPicker = PKToolPicker.init()
 //        toolPicker.setVisible(true, forFirstResponder: canvasView)
-        CanvasView.becomeFirstResponder()
-        view.addSubview(CanvasView)
-        print("tap1")
+        canvasView.becomeFirstResponder()
+        view.addSubview(canvasView)
     }
 }
 
 extension ViewController: PKCanvasViewDelegate {
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
-        print("tap2")
         let drawing = canvasView.drawing
         if (!drawing.strokes.isEmpty) {
             let stroke = drawing.strokes[0]
