@@ -18,7 +18,7 @@ struct ContentView: View {
                 NavigationLink(destination: ViewMedia()) {
                     Text("View Media")
                 }
-                NavigationLink(destination: CreateTrialSettings()) {
+                NavigationLink(destination: CreateTrialSettingsView()) {
                     Text("Create Trial Settings")
                 }
                 NavigationLink(destination: StartATrial()) {
