@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F7CCCC627BEDB56000CB2AD /* PageSettingModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7CCCC527BEDB56000CB2AD /* PageSettingModalView.swift */; };
+		2F822D9C27C778E90038DE6F /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F822D9B27C778E90038DE6F /* ButtonStyles.swift */; };
 		376E137427A6FCAA00747303 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376E137327A6FCAA00747303 /* App.swift */; };
 		376E137627A6FCAA00747303 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376E137527A6FCAA00747303 /* ContentView.swift */; };
 		376E137827A6FCAE00747303 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 376E137727A6FCAE00747303 /* Assets.xcassets */; };
@@ -20,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F7CCCC527BEDB56000CB2AD /* PageSettingModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageSettingModalView.swift; sourceTree = "<group>"; };
+		2F822D9B27C778E90038DE6F /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
 		376E137027A6FCAA00747303 /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		376E137327A6FCAA00747303 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		376E137527A6FCAA00747303 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -44,6 +48,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2F7CCCC427BEDB32000CB2AD /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2F7CCCC527BEDB56000CB2AD /* PageSettingModalView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2F822D9A27C778430038DE6F /* Styles */ = {
+			isa = PBXGroup;
+			children = (
+				2F822D9B27C778E90038DE6F /* ButtonStyles.swift */,
+			);
+			path = Styles;
+			sourceTree = "<group>";
+		};
 		376E136727A6FCAA00747303 = {
 			isa = PBXGroup;
 			children = (
@@ -63,6 +83,8 @@
 		376E137227A6FCAA00747303 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				2F822D9A27C778430038DE6F /* Styles */,
+				2F7CCCC427BEDB32000CB2AD /* Views */,
 				376E137327A6FCAA00747303 /* App.swift */,
 				376E137527A6FCAA00747303 /* ContentView.swift */,
 				376E139027A6FFDB00747303 /* CreateTrialSettingsView.swift */,
@@ -158,6 +180,8 @@
 				376E137D27A6FCAE00747303 /* Persistence.swift in Sources */,
 				376E139727A6FFDB00747303 /* UploadMedia.swift in Sources */,
 				376E138027A6FCAE00747303 /* App.xcdatamodeld in Sources */,
+				2F822D9C27C778E90038DE6F /* ButtonStyles.swift in Sources */,
+				2F7CCCC627BEDB56000CB2AD /* PageSettingModalView.swift in Sources */,
 				376E137627A6FCAA00747303 /* ContentView.swift in Sources */,
 				376E139627A6FFDB00747303 /* View Media.swift in Sources */,
 				376E137427A6FCAA00747303 /* App.swift in Sources */,
