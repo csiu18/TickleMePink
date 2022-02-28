@@ -21,8 +21,14 @@ struct ContentView: View {
                 NavigationLink(destination: CreateTrialSettings()) {
                     Text("Create Trial Settings")
                 }
+                NavigationLink(destination: EditTrialSettings()) {
+                    Text("Edit Trial Settings")
+                }
                 NavigationLink(destination: StartATrial()) {
                     Text("Start a Trial")
+                }
+                NavigationLink(destination: ExportData()) {
+                    Text("Export Data")
                 }
             }
             .navigationTitle("Menu")
