@@ -1,0 +1,7 @@
+## Build generated
+build/
+DerivedData/
+
+xcuserdata/
+
+*.xcodeproj/*
