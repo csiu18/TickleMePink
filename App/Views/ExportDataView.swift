@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ExportData: View {
+struct ExportDataView: View {
     var body: some View {
         Text("Export Data Screen")
     }
@@ -15,6 +15,6 @@ struct ExportData: View {
 
 struct ExportData_Previews: PreviewProvider {
     static var previews: some View {
-        ExportData()
+        ExportDataView()
     }
 }

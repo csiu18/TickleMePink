@@ -9,7 +9,7 @@ import UIKit
 import PencilKit
 import SwiftUI
 
-struct StartATrial: UIViewControllerRepresentable {
+struct StartATrialView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
         return ViewController()
     }

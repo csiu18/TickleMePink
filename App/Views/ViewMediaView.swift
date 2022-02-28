@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ViewMedia: View {
+struct ViewMediaView: View {
     var body: some View {
         Text("View Media Screen")
     }
@@ -15,6 +15,6 @@ struct ViewMedia: View {
 
 struct ViewMedia_Previews: PreviewProvider {
     static var previews: some View {
-        ViewMedia()
+        ViewMediaView()
     }
 }

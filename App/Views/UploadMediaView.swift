@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct UploadMedia: View {
+struct UploadMediaView: View {
     var body: some View {
         Text("Upload Media Screen")
     }
@@ -15,6 +15,6 @@ struct UploadMedia: View {
 
 struct UploadMedia_Previews: PreviewProvider {
     static var previews: some View {
-        UploadMedia()
+        UploadMediaView()
     }
 }
