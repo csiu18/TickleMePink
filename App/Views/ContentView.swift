@@ -12,22 +12,22 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                NavigationLink(destination: UploadMedia()) {
+                NavigationLink(destination: UploadMediaView()) {
                     Text("Upload Media")
                 }
-                NavigationLink(destination: ViewMedia()) {
+                NavigationLink(destination: ViewMediaView()) {
                     Text("View Media")
                 }
-                NavigationLink(destination: CreateTrialSettings()) {
+                NavigationLink(destination: CreateTrialSettingsView()) {
                     Text("Create Trial Settings")
                 }
-                NavigationLink(destination: EditTrialSettings()) {
+                NavigationLink(destination: EditTrialSettingsView()) {
                     Text("Edit Trial Settings")
                 }
-                NavigationLink(destination: StartATrial()) {
+                NavigationLink(destination: StartATrialView()) {
                     Text("Start a Trial")
                 }
-                NavigationLink(destination: ExportData()) {
+                NavigationLink(destination: ExportDataView()) {
                     Text("Export Data")
                 }
             }

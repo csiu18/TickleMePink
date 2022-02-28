@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CreateTrialSettings: View {
+struct CreateTrialSettingsView: View {
     var body: some View {
         Text("Create Trial Settings Screen")
     }
@@ -15,6 +15,6 @@ struct CreateTrialSettings: View {
 
 struct CreateTrialSettings_Previews: PreviewProvider {
     static var previews: some View {
-        CreateTrialSettings()
+        CreateTrialSettingsView()
     }
 }
