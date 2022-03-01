@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2F490AEF27CD44370096C86B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 2F490AEE27CD44370096C86B /* .gitignore */; };
+		2F490AF327CE8FFF0096C86B /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = 2F490AF227CE8FFF0096C86B /* .gitattributes */; };
 		3718E12E27CD39B100A3EBBB /* EditTrialSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3718E12D27CD39B100A3EBBB /* EditTrialSettingsView.swift */; };
 		3718E13027CD39D300A3EBBB /* ExportDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3718E12F27CD39D300A3EBBB /* ExportDataView.swift */; };
 		376E137427A6FCAA00747303 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376E137327A6FCAA00747303 /* App.swift */; };
@@ -24,6 +25,7 @@
 
 /* Begin PBXFileReference section */
 		2F490AEE27CD44370096C86B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		2F490AF227CE8FFF0096C86B /* .gitattributes */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitattributes; sourceTree = "<group>"; };
 		3718E12D27CD39B100A3EBBB /* EditTrialSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTrialSettingsView.swift; sourceTree = "<group>"; };
 		3718E12F27CD39D300A3EBBB /* ExportDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportDataView.swift; sourceTree = "<group>"; };
 		376E137027A6FCAA00747303 /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,6 +69,7 @@
 		376E136727A6FCAA00747303 = {
 			isa = PBXGroup;
 			children = (
+				2F490AF227CE8FFF0096C86B /* .gitattributes */,
 				2F490AEE27CD44370096C86B /* .gitignore */,
 				376E137227A6FCAA00747303 /* App */,
 				376E137127A6FCAA00747303 /* Products */,
@@ -163,6 +166,7 @@
 				376E137B27A6FCAE00747303 /* Preview Assets.xcassets in Resources */,
 				2F490AEF27CD44370096C86B /* .gitignore in Resources */,
 				376E137827A6FCAE00747303 /* Assets.xcassets in Resources */,
+				2F490AF327CE8FFF0096C86B /* .gitattributes in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
