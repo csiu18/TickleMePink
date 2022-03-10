@@ -47,8 +47,7 @@ struct ViewMedia: View {
     @EnvironmentObject var mediaData: MediaData
     
     private var gridItems = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-    
-    
+
     var body: some View {
         LazyVGrid(columns: gridItems, spacing: 10) {
             ForEach(mediaData.media.indices, id: \.self) { i in
@@ -67,12 +66,18 @@ struct ViewMedia: View {
                                         .padding(.bottom, 5)
                                 } else {
                                     let path = Bundle.main.url(forResource: mediaName, withExtension: "mov")!
-
-                                    VideoPlayer(player: AVPlayer(url: path))
-                                        .scaledToFit()
-                                        .frame(height: 150)
-                                        .padding(.top, 10)
-                                        .padding(.bottom, 5)
+                                    let aspectRatio: CGFloat = 1552 / 2880
+                                    
+                                    GeometryReader { geo in
+                                        VideoPlayer(player: AVPlayer(url: path))
+                                            .frame( height: geo.size.width * aspectRatio)
+                                        
+                                    }
+                                    .frame(width: 278, height: 150)
+                                    .cornerRadius(10)
+                                    .padding(.top, 10)
+                                    .padding(.bottom, 5)
+                                    
                                 }
                                 Text(mediaName)
                                     .minimumScaleFactor(0.5)
@@ -89,7 +94,7 @@ struct ViewMedia: View {
                             .frame(width:40,height:40)
                             .background(Color.black)
                             .cornerRadius(100)
-                    }.offset(x:(item.contains(".png")) ? 130 : 70,y:-90)
+                    }.offset(x:130,y:-90)
                 }
             }
         }
