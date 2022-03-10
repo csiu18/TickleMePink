@@ -7,6 +7,36 @@
 
 import SwiftUI
 import UIKit
+import AVKit
+
+struct MediaItemView: View {
+    let name: String
+
+    var body: some View {
+        let mediaName = String(name.dropLast(4))
+        VStack() {
+            if (name.contains("png")) {
+                Image(mediaName)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(.bottom, 10)
+            } else {
+                let path = Bundle.main.url(forResource: mediaName, withExtension: "mov")!
+
+                VideoPlayer(player: AVPlayer(url: path))
+                    .scaledToFit()
+                    .padding(.bottom, 10)
+            }
+            Text(mediaName)
+                .padding(.bottom, 10)
+        }
+    }
+}
+
+
+class MediaData: ObservableObject {
+    @Published var media: [String] = []
+}
 
 struct ViewMedia: View {
     init(){
@@ -14,100 +44,96 @@ struct ViewMedia: View {
         UITableView.appearance().separatorColor = .clear
     }
     
-    var media: [String] = ["scene2-static-with-numbers", "scene2-static-without-numbers"]
+    @EnvironmentObject var mediaData: MediaData
+    
     private var gridItems = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
+    
     var body: some View {
-//        List(media, id: \.self) { item in
-//            NavigationLink(destination: MediaItem(name: item)) {
-//                VStack(alignment: .leading, spacing: 10) {
-//                    Image(item)
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(height: 150)
-//                        .cornerRadius(10)
-//                        .padding(.top, 10)
-//                        .padding(.bottom, 5)
-//                    Text(item)
-//                        .minimumScaleFactor(0.5)
-//                        .padding(.bottom, 10)
-//                }
-//            }
-//        }
         LazyVGrid(columns: gridItems, spacing: 10) {
-            ForEach(media, id: \.self) { item in
-                NavigationLink(destination: MediaItem(name: item)) {
-                    VStack(spacing: 10) {
-                        Image(item)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 150)
-                            .cornerRadius(10)
-                            .padding(.top, 10)
-                            .padding(.bottom, 5)
-                        Text(item)
-                            .minimumScaleFactor(0.5)
-                            .padding(.bottom, 10)
+            ForEach(mediaData.media.indices, id: \.self) { i in
+                let item =  mediaData.media[i]
+                let mediaName = String(item.dropLast(4))
+                ZStack {
+                    NavigationLink(destination: MediaItemView(name: item)) {
+                            VStack(spacing: 10) {
+                                if (item.contains(".png")) {
+                                    Image(mediaName)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 150)
+                                        .cornerRadius(10)
+                                        .padding(.top, 10)
+                                        .padding(.bottom, 5)
+                                } else {
+                                    let path = Bundle.main.url(forResource: mediaName, withExtension: "mov")!
+
+                                    VideoPlayer(player: AVPlayer(url: path))
+                                        .scaledToFit()
+                                        .frame(height: 150)
+                                        .padding(.top, 10)
+                                        .padding(.bottom, 5)
+                                }
+                                Text(mediaName)
+                                    .minimumScaleFactor(0.5)
+                                    .padding(.bottom, 10)
+                            }
                     }
+                    Button(action : {
+                        mediaData.media.remove(at: i)
+                        print("item deleted", i)
+                    })
+                    {
+                        Text("x")
+                            .foregroundColor(.white)
+                            .frame(width:40,height:40)
+                            .background(Color.black)
+                            .cornerRadius(100)
+                    }.offset(x:(item.contains(".png")) ? 130 : 70,y:-90)
                 }
             }
         }
         .navigationBarTitle("View Media")
         .navigationBarTitleDisplayMode(.inline)
-//        .edgesIgnoringSafeArea([.top, .bottom])
         .background(Color.white)
+        
         Spacer()
-    }
-}
-
-struct MediaItem: View {
-    let name: String
-    
-    var body: some View {
-        VStack() {
-            Image(name)
-                .resizable()
-                .scaledToFit()
-                .padding(.bottom, 10)
-            Text(name)
-                .padding(.bottom, 10)
-        }
     }
 }
 
 
 class ViewMediaController: UIViewController {
-    fileprivate let contentView = UIHostingController(rootView: ViewMedia())
     var pictures = [String]()
+    @IBOutlet var mediaList: [String] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // may not need this later -------------
         let fm = FileManager.default
         let path = Bundle.main.resourcePath!
         let items = try! fm.contentsOfDirectory(atPath: path)
 
         for item in items {
-            if item.hasSuffix(".png") {
+            if (item.hasSuffix(".png") || item.hasSuffix(".mov")) {
                 pictures.append(item)
-
             }
         }
         print(pictures)
+        // -------------------------------------
         
-        setupHC()
-        setupConstraints()
-
-      
-    }
-    
-    fileprivate func setupHC() {
+        var temp: [String] = []
+        for picture in pictures {
+            temp.append(picture)
+        }
+        
+        let mediaView = MediaData()
+        mediaView.media = temp
+        let contentView = UIHostingController(rootView: ViewMedia().environmentObject(mediaView))
+        
         addChild(contentView)
         view.addSubview(contentView.view)
         contentView.didMove(toParent: self)
-    }
-
-    fileprivate func setupConstraints() {
         contentView.view.translatesAutoresizingMaskIntoConstraints = false
         contentView.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         contentView.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
