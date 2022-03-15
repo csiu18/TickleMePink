@@ -8,46 +8,48 @@
 import SwiftUI
 import CoreData
 
-struct ContextConfig<Object: NSManagedObject>: Identifiable {
-    let id = UUID()
-    let childContext: NSManagedObjectContext
-    let object: Object
-    
-    init(parentContext: NSManagedObjectContext) {
-        childContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        childContext.parent = parentContext
-        object = Object(context: childContext)
-    }
-}
-
 
 struct CreateTrialSettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State private var isModalPresented = false
     @State private var partCondition:String = ""
-    @State private var screens:[Int64] = []
+    @State private var screens:[Screen] = []
     
-    private var gridLayout = [GridItem(.adaptive(minimum: 250))]
+    private var gridLayout = [GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
+                              GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
+                              GridItem(.adaptive(minimum: 250)), GridItem(.fixed(50))]
     
     var body: some View {
         VStack(spacing: 20){
-        Text("Create Trial Settings")
+            Text("Create Trial Settings").font(.title)
             VStack(alignment: .leading) {
                 Text("Participant Condition")
-                TextField("Enter Participant Condition...", text:$partCondition)
+                TextField("", text:$partCondition)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.bottom, 50)
             
                 Text("Trial Sequence")
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
-                        ForEach(0..<5) { value in
-                            Rectangle()
-                                .foregroundColor(Color.green)
-                                .frame(width: 250, height: 185)
-                                .overlay(Text("\(value)").foregroundColor(.white))
+                        ForEach(self.screens){ screen in
+                            switch screen.type{
+                                case 0:
+                                    Rectangle()
+                                        .stroke(Color.black, lineWidth: 2)
+                                        .foregroundColor(Color.white)
+                                        .frame(width: 250, height: 185)
+                                        .overlay(Text("Instructions").foregroundColor(.black))
+                                default:
+                                    Rectangle()
+                                        .stroke(Color.black, lineWidth: 2)
+                                        .foregroundColor(Color.white)
+                                        .frame(width: 250, height: 185)
+                                        .overlay(Text("No Type").foregroundColor(.white))
                             
+                            }
+                            Image(systemName: "arrow.right")
                         }
                         Button {
                             addScreen()
@@ -66,10 +68,19 @@ struct CreateTrialSettingsView: View {
             Spacer()
             Button("Save Sequence", action: saveSequence)
         }
+        .padding(20)
         .modifier(ModalViewModifier(isPresented: $isModalPresented,
-                                    content: {CreateTrialSettingsModalView()},
+                                    content: {CreateTrialSettingsModalView(screens: $screens, isModalPresented: $isModalPresented)},
                                     title: "Add Sequence Event"))
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button {
+            self.viewContext.rollback()
+            self.presentationMode.wrappedValue.dismiss()
+        } label: {
+            Text("Cancel")
+        })
     }
+    
     
     func addScreen() {
         self.isModalPresented = true
@@ -83,6 +94,7 @@ struct CreateTrialSettingsView: View {
         } catch {
             print("Error in saving sequence: \(error.localizedDescription)")
         }
+        self.presentationMode.wrappedValue.dismiss()
     }
 }
 
