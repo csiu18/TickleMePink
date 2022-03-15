@@ -13,6 +13,8 @@
 		2FF5C02D27D84F4900404235 /* Screen+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF5C02927D84F4900404235 /* Screen+CoreDataProperties.swift */; };
 		2FF5C02E27D84F4900404235 /* TrialSettings+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF5C02A27D84F4900404235 /* TrialSettings+CoreDataClass.swift */; };
 		2FF5C02F27D84F4900404235 /* TrialSettings+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF5C02B27D84F4900404235 /* TrialSettings+CoreDataProperties.swift */; };
+		2FF5C03827E01FD200404235 /* CreateTrialSettingsModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF5C03727E01FD200404235 /* CreateTrialSettingsModalView.swift */; };
+		2FF5C03A27E026C900404235 /* ModalViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF5C03927E026C900404235 /* ModalViewModifier.swift */; };
 		3718E12E27CD39B100A3EBBB /* EditTrialSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3718E12D27CD39B100A3EBBB /* EditTrialSettingsView.swift */; };
 		3718E13027CD39D300A3EBBB /* ExportDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3718E12F27CD39D300A3EBBB /* ExportDataView.swift */; };
 		376E137427A6FCAA00747303 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376E137327A6FCAA00747303 /* App.swift */; };
@@ -34,6 +36,8 @@
 		2FF5C02927D84F4900404235 /* Screen+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Screen+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		2FF5C02A27D84F4900404235 /* TrialSettings+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrialSettings+CoreDataClass.swift"; sourceTree = "<group>"; };
 		2FF5C02B27D84F4900404235 /* TrialSettings+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrialSettings+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		2FF5C03727E01FD200404235 /* CreateTrialSettingsModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrialSettingsModalView.swift; sourceTree = "<group>"; };
+		2FF5C03927E026C900404235 /* ModalViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalViewModifier.swift; sourceTree = "<group>"; };
 		3718E12D27CD39B100A3EBBB /* EditTrialSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTrialSettingsView.swift; sourceTree = "<group>"; };
 		3718E12F27CD39D300A3EBBB /* ExportDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportDataView.swift; sourceTree = "<group>"; };
 		376E137027A6FCAA00747303 /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,6 +74,8 @@
 				376E139327A6FFDB00747303 /* UploadMediaView.swift */,
 				3718E12F27CD39D300A3EBBB /* ExportDataView.swift */,
 				3718E12D27CD39B100A3EBBB /* EditTrialSettingsView.swift */,
+				2FF5C03727E01FD200404235 /* CreateTrialSettingsModalView.swift */,
+				2FF5C03927E026C900404235 /* ModalViewModifier.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -199,8 +205,10 @@
 			files = (
 				376E137D27A6FCAE00747303 /* Persistence.swift in Sources */,
 				2FF5C02D27D84F4900404235 /* Screen+CoreDataProperties.swift in Sources */,
+				2FF5C03A27E026C900404235 /* ModalViewModifier.swift in Sources */,
 				3718E13027CD39D300A3EBBB /* ExportDataView.swift in Sources */,
 				376E139727A6FFDB00747303 /* UploadMediaView.swift in Sources */,
+				2FF5C03827E01FD200404235 /* CreateTrialSettingsModalView.swift in Sources */,
 				2FF5C02E27D84F4900404235 /* TrialSettings+CoreDataClass.swift in Sources */,
 				376E138027A6FCAE00747303 /* App.xcdatamodeld in Sources */,
 				376E137627A6FCAA00747303 /* ContentView.swift in Sources */,
