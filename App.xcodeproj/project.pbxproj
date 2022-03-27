@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22B9A9B727DC36CA00EF754F /* DrawingData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B9A9B527DC36CA00EF754F /* DrawingData+CoreDataClass.swift */; };
+		22B9A9B827DC36CA00EF754F /* DrawingData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B9A9B627DC36CA00EF754F /* DrawingData+CoreDataProperties.swift */; };
 		2F490AEF27CD44370096C86B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 2F490AEE27CD44370096C86B /* .gitignore */; };
 		2F490AF327CE8FFF0096C86B /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = 2F490AF227CE8FFF0096C86B /* .gitattributes */; };
 		2FF5C02C27D84F4900404235 /* Screen+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF5C02827D84F4900404235 /* Screen+CoreDataClass.swift */; };
@@ -30,6 +32,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		22B9A9B527DC36CA00EF754F /* DrawingData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DrawingData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		22B9A9B627DC36CA00EF754F /* DrawingData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DrawingData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		2F490AEE27CD44370096C86B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		2F490AF227CE8FFF0096C86B /* .gitattributes */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitattributes; sourceTree = "<group>"; };
 		2FF5C02827D84F4900404235 /* Screen+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Screen+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -64,6 +68,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2222D3D127F0BEDE00CFB752 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				22B9A9B527DC36CA00EF754F /* DrawingData+CoreDataClass.swift */,
+				22B9A9B627DC36CA00EF754F /* DrawingData+CoreDataProperties.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		2FF1062427CD3CAF00DD4BE1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				2FF5C03027D84F5F00404235 /* Models */,
+				2222D3D127F0BEDE00CFB752 /* Models */,
 				2FF1062427CD3CAF00DD4BE1 /* Views */,
 				376E137327A6FCAA00747303 /* App.swift */,
 				376E137727A6FCAE00747303 /* Assets.xcassets */,
@@ -207,6 +221,7 @@
 				2FF5C02D27D84F4900404235 /* Screen+CoreDataProperties.swift in Sources */,
 				2FF5C03A27E026C900404235 /* ModalViewModifier.swift in Sources */,
 				3718E13027CD39D300A3EBBB /* ExportDataView.swift in Sources */,
+				22B9A9B727DC36CA00EF754F /* DrawingData+CoreDataClass.swift in Sources */,
 				376E139727A6FFDB00747303 /* UploadMediaView.swift in Sources */,
 				2FF5C03827E01FD200404235 /* CreateTrialSettingsModalView.swift in Sources */,
 				2FF5C02E27D84F4900404235 /* TrialSettings+CoreDataClass.swift in Sources */,
@@ -215,6 +230,7 @@
 				376E139627A6FFDB00747303 /* ViewMediaView.swift in Sources */,
 				2FF5C02C27D84F4900404235 /* Screen+CoreDataClass.swift in Sources */,
 				376E137427A6FCAA00747303 /* App.swift in Sources */,
+				22B9A9B827DC36CA00EF754F /* DrawingData+CoreDataProperties.swift in Sources */,
 				3718E12E27CD39B100A3EBBB /* EditTrialSettingsView.swift in Sources */,
 				2FF5C02F27D84F4900404235 /* TrialSettings+CoreDataProperties.swift in Sources */,
 				376E139427A6FFDB00747303 /* CreateTrialSettingsView.swift in Sources */,
@@ -349,7 +365,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"App/Preview Content\"";
-				DEVELOPMENT_TEAM = KPJHLTKX7S;
+				DEVELOPMENT_TEAM = MD859LCGYY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -378,7 +394,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"App/Preview Content\"";
-				DEVELOPMENT_TEAM = KPJHLTKX7S;
+				DEVELOPMENT_TEAM = MD859LCGYY;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
