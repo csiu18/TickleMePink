@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13A557E827F7576900D798F1 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A557E727F7576900D798F1 /* ImagePicker.swift */; };
 		22B9A9B727DC36CA00EF754F /* DrawingData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B9A9B527DC36CA00EF754F /* DrawingData+CoreDataClass.swift */; };
 		22B9A9B827DC36CA00EF754F /* DrawingData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B9A9B627DC36CA00EF754F /* DrawingData+CoreDataProperties.swift */; };
 		2F490AEF27CD44370096C86B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 2F490AEE27CD44370096C86B /* .gitignore */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		13A557E727F7576900D798F1 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		22B9A9B527DC36CA00EF754F /* DrawingData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DrawingData+CoreDataClass.swift"; sourceTree = "<group>"; };
 		22B9A9B627DC36CA00EF754F /* DrawingData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DrawingData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		2F490AEE27CD44370096C86B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 				3718E12D27CD39B100A3EBBB /* EditTrialSettingsView.swift */,
 				2FF5C03727E01FD200404235 /* CreateTrialSettingsModalView.swift */,
 				2FF5C03927E026C900404235 /* ModalViewModifier.swift */,
+				13A557E727F7576900D798F1 /* ImagePicker.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -216,6 +219,7 @@
 				22B9A9B727DC36CA00EF754F /* DrawingData+CoreDataClass.swift in Sources */,
 				376E139727A6FFDB00747303 /* UploadMediaView.swift in Sources */,
 				2FF5C03827E01FD200404235 /* CreateTrialSettingsModalView.swift in Sources */,
+				13A557E827F7576900D798F1 /* ImagePicker.swift in Sources */,
 				2FF5C02E27D84F4900404235 /* TrialSettings+CoreDataClass.swift in Sources */,
 				376E138027A6FCAE00747303 /* App.xcdatamodeld in Sources */,
 				376E137627A6FCAA00747303 /* ContentView.swift in Sources */,
