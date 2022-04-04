@@ -11,7 +11,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 20){
                 NavigationLink(destination: UploadMediaView()) {
                     Text("Upload Media")
                 }
@@ -32,6 +32,7 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Menu")
+            .navigationBarTitleDisplayMode(.inline)
         }.navigationViewStyle(StackNavigationViewStyle())
         
     }
