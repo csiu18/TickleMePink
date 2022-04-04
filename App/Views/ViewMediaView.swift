@@ -10,150 +10,138 @@ import UIKit
 import AVKit
 
 struct MediaItemView: View {
-    let name: String
+    let item: Media
 
     var body: some View {
-        let mediaName = String(name.dropLast(4))
         VStack() {
-            if (name.contains("png")) {
-                Image(mediaName)
+            Image(uiImage: UIImage(data: item.data!)!)
                     .resizable()
                     .scaledToFit()
                     .padding(.bottom, 10)
-            } else {
-                let path = Bundle.main.url(forResource: mediaName, withExtension: "mov")!
-
-                VideoPlayer(player: AVPlayer(url: path))
-                    .scaledToFit()
-                    .padding(.bottom, 10)
-            }
-            Text(mediaName)
+            Text(item.name!)
                 .padding(.bottom, 10)
         }
     }
 }
 
-
-class MediaData: ObservableObject {
-    @Published var media: [String] = []
-}
-
-struct ViewMedia: View {
+struct ViewMediaView: View {
     init(){
         UITableView.appearance().backgroundColor = .clear
         UITableView.appearance().separatorColor = .clear
     }
     
-    @EnvironmentObject var mediaData: MediaData
+    @Environment(\.managedObjectContext) private var viewContext
     
     private var gridItems = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-
+    
+    @FetchRequest(entity: Media.entity(), sortDescriptors: [])
+        var mediaData: FetchedResults<Media>
+    
+    
     var body: some View {
         LazyVGrid(columns: gridItems, spacing: 10) {
-            ForEach(mediaData.media.indices, id: \.self) { i in
-                let item =  mediaData.media[i]
-                let mediaName = String(item.dropLast(4))
-                ZStack {
-                    NavigationLink(destination: MediaItemView(name: item)) {
+            ForEach(mediaData.indices, id: \.self) { i in
+                let item =  mediaData[i]
+                let mediaName = item.name
+                    ZStack {
+                        NavigationLink(destination: MediaItemView(item: item)) {
                             VStack(spacing: 10) {
-                                if (item.contains(".png")) {
-                                    Image(mediaName)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 150)
-                                        .cornerRadius(10)
-                                        .padding(.top, 10)
-                                        .padding(.bottom, 5)
-                                } else {
-                                    let path = Bundle.main.url(forResource: mediaName, withExtension: "mov")!
-                                    let aspectRatio: CGFloat = 1552 / 2880
-                                    
-                                    GeometryReader { geo in
-                                        VideoPlayer(player: AVPlayer(url: path))
-                                            .frame( height: geo.size.width * aspectRatio)
-                                        
-                                    }
-                                    .frame(width: 278, height: 150)
+                                Image(uiImage: UIImage(data: item.data!)!)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 150)
                                     .cornerRadius(10)
                                     .padding(.top, 10)
                                     .padding(.bottom, 5)
-                                    
-                                }
-                                Text(mediaName)
+                                Button(action : {
+                                    print("change name")
+                                })
+                                {
+                                    Text(mediaName!)
                                     .minimumScaleFactor(0.5)
                                     .padding(.bottom, 10)
+                                }
                             }
+                        }
+                        Button(action : {
+                            let _ = viewContext.delete(item)
+                            try? viewContext.save()
+                        })
+                        {
+                            Text("x")
+                                .foregroundColor(.white)
+                                .frame(width:40,height:40)
+                                .background(Color.black)
+                                .cornerRadius(100)
+                        }.offset(x:130,y:-90)
                     }
-                    Button(action : {
-                        mediaData.media.remove(at: i)
-                        print("item deleted", i)
-                    })
-                    {
-                        Text("x")
-                            .foregroundColor(.white)
-                            .frame(width:40,height:40)
-                            .background(Color.black)
-                            .cornerRadius(100)
-                    }.offset(x:130,y:-90)
-                }
             }
         }
         .navigationBarTitle("View Media")
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.white)
-        
+
         Spacer()
     }
-}
+    
 
-
-class ViewMediaController: UIViewController {
-    var pictures = [String]()
-    @IBOutlet var mediaList: [String] = []
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // may not need this later -------------
-        let fm = FileManager.default
-        let path = Bundle.main.resourcePath!
-        let items = try! fm.contentsOfDirectory(atPath: path)
-
-        for item in items {
-            if (item.hasSuffix(".png") || item.hasSuffix(".mov")) {
-                pictures.append(item)
-            }
-        }
-        print(pictures)
-        // -------------------------------------
-        
-        var temp: [String] = []
-        for picture in pictures {
-            temp.append(picture)
-        }
-        
-        let mediaView = MediaData()
-        mediaView.media = temp
-        let contentView = UIHostingController(rootView: ViewMedia().environmentObject(mediaView))
-        
-        addChild(contentView)
-        view.addSubview(contentView.view)
-        contentView.didMove(toParent: self)
-        contentView.view.translatesAutoresizingMaskIntoConstraints = false
-        contentView.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        contentView.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        contentView.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        contentView.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-    }
-}
-
-struct ViewMediaView: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> UIViewController {
-        return ViewMediaController()
-    }
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
-
-    }
+// Old code
+//    var body: some View {
+//        LazyVGrid(columns: gridItems, spacing: 10) {
+//            ForEach(mediaData.media.indices, id: \.self) { i in
+//                let item =  mediaData.media[i]
+//                let mediaName = String(item.dropLast(4))
+//                ZStack {
+//                    NavigationLink(destination: MediaItemView(name: item)) {
+//                            VStack(spacing: 10) {
+//                                if (item.contains(".png")) {
+//                                    Image(mediaName)
+//                                        .resizable()
+//                                        .scaledToFit()
+//                                        .frame(height: 150)
+//                                        .cornerRadius(10)
+//                                        .padding(.top, 10)
+//                                        .padding(.bottom, 5)
+//                                } else {
+//                                    let path = Bundle.main.url(forResource: mediaName, withExtension: "mov")!
+//                                    let aspectRatio: CGFloat = 1552 / 2880
+//
+//                                    GeometryReader { geo in
+//                                        VideoPlayer(player: AVPlayer(url: path))
+//                                            .frame( height: geo.size.width * aspectRatio)
+//
+//                                    }
+//                                    .frame(width: 278, height: 150)
+//                                    .cornerRadius(10)
+//                                    .padding(.top, 10)
+//                                    .padding(.bottom, 5)
+//
+//                                }
+//                                Text(mediaName)
+//                                    .minimumScaleFactor(0.5)
+//                                    .padding(.bottom, 10)
+//                            }
+//                    }
+//                    Button(action : {
+//                        mediaData.media.remove(at: i)
+//                        print("item deleted", i)
+//                    })
+//                    {
+//                        Text("x")
+//                            .foregroundColor(.white)
+//                            .frame(width:40,height:40)
+//                            .background(Color.black)
+//                            .cornerRadius(100)
+//                    }.offset(x:130,y:-90)
+//                }
+//            }
+//        }
+//        .navigationBarTitle("View Media")
+//        .navigationBarTitleDisplayMode(.inline)
+//        .background(Color.white)
+//
+//        Spacer()
+//    }
 }
 
 struct ViewMedia_Previews: PreviewProvider {
