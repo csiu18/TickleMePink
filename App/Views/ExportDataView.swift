@@ -9,6 +9,7 @@ import SwiftUI
 import PencilKit
 
 // Trial name, participant id, timestamp
+// remember to fix the text issue with filename
 
 struct ExportDataView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -85,13 +86,13 @@ struct popoverView: View {
                     }
                 }
             }
-            Button(action: {exportButton(points: dData.strokes as! [[CGFloat]], fileName: exportName)}) {
+            Button(action: {exportButton(points: dData.strokes as! [[CGFloat]], fileName: exportName, defaultName: dData.identifier!)}) {
                 Label("Export", systemImage: "folder")
             }
             Spacer()
         }
     }
-    func exportButton(points: [[CGFloat]], fileName: String) {
+    func exportButton(points: [[CGFloat]], fileName: String, defaultName: String) {
         presentationMode.wrappedValue.dismiss()
         var tester = ""
         for point in points {
@@ -99,7 +100,11 @@ struct popoverView: View {
         }
         tester.removeLast()
         tester.removeLast()
-        let directory = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName + ".txt")
+        var name = fileName
+        if (name == "") {
+            name = defaultName
+        }
+        let directory = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name + ".txt")
         do {
             try tester.write(to: directory!, atomically: true, encoding: .utf8)
         } catch {
