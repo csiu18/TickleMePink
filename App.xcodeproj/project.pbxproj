@@ -93,9 +93,9 @@
 				2FF5C02827D84F4900404235 /* Screen+CoreDataClass.swift */,
 				2FF5C02927D84F4900404235 /* Screen+CoreDataProperties.swift */,
 				2FF5C02A27D84F4900404235 /* TrialSettings+CoreDataClass.swift */,
+				2FF5C02B27D84F4900404235 /* TrialSettings+CoreDataProperties.swift */,
 				22B9A9B527DC36CA00EF754F /* DrawingData+CoreDataClass.swift */,
 				22B9A9B627DC36CA00EF754F /* DrawingData+CoreDataProperties.swift */,
-				2FF5C02B27D84F4900404235 /* TrialSettings+CoreDataProperties.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";

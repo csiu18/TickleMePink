@@ -57,8 +57,10 @@ struct UploadMediaView: View {
                 //let entityName = NSEntityDescription.entity(forEntityName: "Media", in: viewContext)
                 let imageInstance = Media(context: viewContext)
                 imageInstance.data = imageData
-                imageInstance.name = "temp"
+                imageInstance.name = String(mediaPath![mediaPath!.lastIndex(of: "/")!...].dropFirst(1))
                 imageInstance.url = mediaPath
+                
+                try? viewContext.save()
            
             }, label: {
                 Text("Save Media")
