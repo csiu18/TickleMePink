@@ -12,10 +12,12 @@ import CoreData
 struct CreateTrialSettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
-    @State private var isModalPresented = false
+   
+    @State private var isCreateModalPresented = false
+    @State private var isEditModalPresented = false
     @State private var partCondition:String = ""
     @State private var screens:[Screen] = []
+    @State private var toBeEdited: Int = -1
     
     private var gridLayout = [GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
                               GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
@@ -33,14 +35,18 @@ struct CreateTrialSettingsView: View {
                 Text("Trial Sequence")
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
-                        ForEach(self.screens){ screen in
-                            switch screen.type{
+                        ForEach(self.screens.indices, id: \.self){ index in
+                            switch self.screens[index].type{
                                 case 0:
-                                    Rectangle()
-                                        .stroke(Color.black, lineWidth: 2)
-                                        .foregroundColor(Color.white)
-                                        .frame(width: 250, height: 185)
-                                        .overlay(Text("Instructions").foregroundColor(.black))
+                                    Button {
+                                        editScreen(toBeEdited: index)
+                                    } label: {
+                                        Rectangle()
+                                            .stroke(Color.black, lineWidth: 2)
+                                            .foregroundColor(Color.white)
+                                            .frame(width: 250, height: 185)
+                                            .overlay(Text("Instructions").foregroundColor(.black))
+                                    }
                                 default:
                                     Rectangle()
                                         .stroke(Color.black, lineWidth: 2)
@@ -69,9 +75,12 @@ struct CreateTrialSettingsView: View {
             Button("Save Sequence", action: saveSequence)
         }
         .padding(20)
-        .modifier(ModalViewModifier(isPresented: $isModalPresented,
-                                    content: {CreateTrialSettingsModalView(screens: $screens, isModalPresented: $isModalPresented)},
+        .modifier(ModalViewModifier(isPresented: $isCreateModalPresented,
+                                    content: {CreateTrialSettingsModalView(screens: $screens, isModalPresented: $isCreateModalPresented)},
                                     title: "Add Sequence Event"))
+        .modifier(ModalViewModifier(isPresented: $isEditModalPresented,
+                                    content: {EditTrialSettingsModalView(screens: $screens, screenIndex: $toBeEdited, isModalPresented: $isEditModalPresented)},
+                                    title: "Edit Sequence Event"))
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button {
             self.viewContext.rollback()
@@ -81,14 +90,22 @@ struct CreateTrialSettingsView: View {
         })
     }
     
+    func editScreen(toBeEdited: Int) {
+        self.toBeEdited = toBeEdited
+        self.isEditModalPresented = true
+    }
     
     func addScreen() {
-        self.isModalPresented = true
+        self.isCreateModalPresented = true
     }
     
     func saveSequence() {
         let newSettings = TrialSettings(context: self.viewContext)
         newSettings.partCondition = self.partCondition
+        
+        let orderedSet = NSOrderedSet(array: self.screens)
+        newSettings.addToScreenToTrialSettings(orderedSet)
+        
         do {
             try self.viewContext.save()
         } catch {
