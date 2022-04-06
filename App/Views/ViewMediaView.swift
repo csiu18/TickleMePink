@@ -13,30 +13,11 @@ struct MediaItemView: View {
     let item: Media
 
     var body: some View {
-        ZStack (alignment: .topTrailing) {
-            VStack(alignment: .trailing) {
-                    Text("x")
-                        .frame(width:40,height:40)
-                        .background(Color.clear)
-                        .cornerRadius(100)
-                        .offset(x: 10, y: 30)
-                Image(uiImage: UIImage(data: item.data!)!)
-                        .resizable()
-                        .scaledToFit()
-                        .cornerRadius(15)
-                        .frame(width: 970)
-            }
-            Button(action : {
-                UIApplication.shared.windows[0].rootViewController?.dismiss(animated: true, completion: {})
-            }) {
-            Text("x")
-                .foregroundColor(.white)
-                .frame(width:40,height:40)
-                .background(Color.black)
-                .cornerRadius(100)
-                .offset(x: 15, y: 30)
-            }
-        }
+        Image(uiImage: UIImage(data: item.data!)!)
+                .resizable()
+                .scaledToFit()
+                .cornerRadius(15)
+                .frame(width: 970)
     }
 }
 
@@ -58,9 +39,11 @@ struct ViewMediaView: View {
             ForEach(mediaData.indices, id: \.self) { i in
                 let item =  mediaData[i]
                 let mediaName = item.name
+                VStack {
                     ZStack (alignment: .topTrailing) {
                         VStack(spacing: 10) {
                             Text("x")
+                                .foregroundColor(Color.white)
                                 .frame(width:40,height:40)
                                 .background(Color.clear)
                                 .offset(x: 15, y: 40)
@@ -80,22 +63,10 @@ struct ViewMediaView: View {
                                     .padding(.top, 10)
                                     .padding(.bottom, 5)
                             }
-                  
-                            Button(action : {
-                                let alertHC = UIHostingController(rootView: AlertView(item: item).environment(\.managedObjectContext, viewContext))
-                                alertHC.preferredContentSize = CGSize(width: 300, height: 175)
-                                alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
-                                UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
-                            })
-                            {
-                                Text(mediaName!)
-                                .minimumScaleFactor(0.5)
-                                .padding(.bottom, 10)
-                            }
                         }
                         Button(action : {
                             let alertHC = UIHostingController(rootView: ConfirmView(item: item).environment(\.managedObjectContext, viewContext))
-                            alertHC.preferredContentSize = CGSize(width: 300, height: 125)
+                            alertHC.preferredContentSize = CGSize(width: 300, height: 115)
                             alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
                             UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
                         })
@@ -107,6 +78,18 @@ struct ViewMediaView: View {
                                 .cornerRadius(100)
                         }.offset(x: 15, y: 40)
                     }.padding(.top, -10)
+                    Button(action : {
+                        let alertHC = UIHostingController(rootView: AlertView(item: item).environment(\.managedObjectContext, viewContext))
+                        alertHC.preferredContentSize = CGSize(width: 300, height: 175)
+                        alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
+                        UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
+                    })
+                    {
+                        Text(mediaName!)
+                        .minimumScaleFactor(0.5)
+                        .padding(10)
+                    }
+                }
             }
         }
             .navigationBarTitle("View Media")

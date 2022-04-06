@@ -35,8 +35,6 @@ struct ContentView: View {
                     Text("Export Data").font(.title).fontWeight(.medium)
                 }
             }
-            .navigationTitle("Menu")
-            .navigationBarTitleDisplayMode(.inline)
         }.navigationViewStyle(StackNavigationViewStyle())
         
     }

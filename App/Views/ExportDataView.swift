@@ -73,9 +73,9 @@ struct popoverView: View {
     }
     var body: some View {
         VStack{
-            TextField(text: $exportName, prompt: Text(x)) {
+            TextField(text: $exportName, prompt: Text("Name Your File..")) {
                 Text("File Name")
-            }.multilineTextAlignment(.center).padding(.top, 30).padding(.bottom, -25)
+            }.multilineTextAlignment(.center).padding(.top, 30).padding(.bottom, -35)
             List {
                 ForEach(dData.strokes as! [[CGFloat]], id: \.self) { point in
                     VStack {
@@ -85,7 +85,7 @@ struct popoverView: View {
             }.padding(15).padding(.top, 0)
             Button(action: {exportButton(points: dData.strokes as! [[CGFloat]], fileName: exportName)}) {
                 Label("Export", systemImage: "folder")
-            }.padding(.bottom, 15)
+            }.padding(.bottom, 20)
         }.background(Color(white: 0.95))
     }
     func exportButton(points: [[CGFloat]], fileName: String) {
