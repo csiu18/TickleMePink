@@ -13,13 +13,29 @@ struct MediaItemView: View {
     let item: Media
 
     var body: some View {
-        VStack() {
-            Image(uiImage: UIImage(data: item.data!)!)
-                    .resizable()
-                    .scaledToFit()
-                    .padding(.bottom, 10)
-            Text(item.name!)
-                .padding(.bottom, 10)
+        ZStack (alignment: .topTrailing) {
+            VStack(alignment: .trailing) {
+                    Text("x")
+                        .frame(width:40,height:40)
+                        .background(Color.clear)
+                        .cornerRadius(100)
+                        .offset(x: 10, y: 30)
+                Image(uiImage: UIImage(data: item.data!)!)
+                        .resizable()
+                        .scaledToFit()
+                        .cornerRadius(15)
+                        .frame(width: 970)
+            }
+            Button(action : {
+                UIApplication.shared.windows[0].rootViewController?.dismiss(animated: true, completion: {})
+            }) {
+            Text("x")
+                .foregroundColor(.white)
+                .frame(width:40,height:40)
+                .background(Color.black)
+                .cornerRadius(100)
+                .offset(x: 15, y: 30)
+            }
         }
     }
 }
@@ -42,9 +58,20 @@ struct ViewMediaView: View {
             ForEach(mediaData.indices, id: \.self) { i in
                 let item =  mediaData[i]
                 let mediaName = item.name
-                    ZStack {
-                        NavigationLink(destination: MediaItemView(item: item)) {
-                            VStack(spacing: 10) {
+                    ZStack (alignment: .topTrailing) {
+                        VStack(spacing: 10) {
+                            Text("x")
+                                .frame(width:40,height:40)
+                                .background(Color.clear)
+                                .offset(x: 15, y: 40)
+                            Button(action : {
+                                let alertHC = UIHostingController(rootView: MediaItemView(item: item))
+                                alertHC.view.backgroundColor = .clear
+                                alertHC.preferredContentSize = CGSize(width: 1000, height: 1000)
+                                alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
+
+                                UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
+                            }) {
                                 Image(uiImage: UIImage(data: item.data!)!)
                                     .resizable()
                                     .scaledToFit()
@@ -52,24 +79,25 @@ struct ViewMediaView: View {
                                     .cornerRadius(10)
                                     .padding(.top, 10)
                                     .padding(.bottom, 5)
-                                Button(action : {
-                                    let alertHC = UIHostingController(rootView: AlertView(item: item).environment(\.managedObjectContext, viewContext))
-
-                                    alertHC.preferredContentSize = CGSize(width: 300, height: 175)
-                                    alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
-
-                                    UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
-                                })
-                                {
-                                    Text(mediaName!)
-                                    .minimumScaleFactor(0.5)
-                                    .padding(.bottom, 10)
-                                }
+                            }
+                  
+                            Button(action : {
+                                let alertHC = UIHostingController(rootView: AlertView(item: item).environment(\.managedObjectContext, viewContext))
+                                alertHC.preferredContentSize = CGSize(width: 300, height: 175)
+                                alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
+                                UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
+                            })
+                            {
+                                Text(mediaName!)
+                                .minimumScaleFactor(0.5)
+                                .padding(.bottom, 10)
                             }
                         }
                         Button(action : {
-                            let _ = viewContext.delete(item)
-                            try? viewContext.save()
+                            let alertHC = UIHostingController(rootView: ConfirmView(item: item).environment(\.managedObjectContext, viewContext))
+                            alertHC.preferredContentSize = CGSize(width: 300, height: 125)
+                            alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
+                            UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
                         })
                         {
                             Text("x")
@@ -77,28 +105,57 @@ struct ViewMediaView: View {
                                 .frame(width:40,height:40)
                                 .background(Color.black)
                                 .cornerRadius(100)
-                        }.offset(x:130,y:-90)
-                    }
+                        }.offset(x: 15, y: 40)
+                    }.padding(.top, -10)
             }
         }
-        .navigationBarTitle("View Media")
-        .navigationBarTitleDisplayMode(.inline)
-        .background(Color.white)
+            .navigationBarTitle("View Media")
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color.white)
         Spacer()
+    }
+}
+
+struct ConfirmView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    let item: Media
+    
+    var body: some View {
+        VStack {
+            Text("Are you sure you want to delete?").font(.headline).padding(.top, 20).padding(.bottom, 20)
+
+            Divider()
+            HStack {
+                Spacer()
+                Button(action: {
+                    UIApplication.shared.windows[0].rootViewController?.dismiss(animated: true, completion: {})
+                    let _ = viewContext.delete(item)
+                    try? viewContext.save()
+                }) {
+                    Text("Yes")
+                }.padding(.bottom,5)
+                Spacer()
+                Divider()
+                Spacer()
+                Button(action: {
+                    UIApplication.shared.windows[0].rootViewController?.dismiss(animated: true, completion: {})
+                }) {
+                    Text("No")
+                }.padding(.bottom,5)
+                Spacer()
+            }.frame(height: 40).padding(0)
+            }.background(Color(white: 0.9))
     }
 }
 
 struct AlertView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State private var text: String = ""
-    @State private var showingAlert = false
     let item: Media
     
     var body: some View {
         VStack {
-            Text("Enter Media Name").font(.headline)
-                .padding(.top, 20)
-                .padding(.bottom, 0)
+            Text("Enter Media Name").font(.headline).padding(.top, 20).padding(.bottom, 0)
 
             TextField("Name...", text: $text).textFieldStyle(RoundedBorderTextFieldStyle()).padding()
             Divider()
@@ -128,9 +185,7 @@ struct AlertView: View {
                     Text("Cancel")
                 }.padding(.bottom,5)
                 Spacer()
-            }
-            .frame(height: 40)
-            .padding(0)
+            }.frame(height: 40).padding(0)
             }.background(Color(white: 0.9))
     }
 }
