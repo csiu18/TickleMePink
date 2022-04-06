@@ -45,7 +45,7 @@ struct ViewMediaView: View {
                                 .foregroundColor(Color.white)
                                 .frame(width: 40, height: 40)
                                 .background(Color.clear)
-                                .offset(x: 15, y: 40)
+                                .offset(x: 15, y: 45)
                             Button(action : {
                                 let alertHC = UIHostingController(rootView: MediaItemView(item: item))
                                 alertHC.view.backgroundColor = .clear
@@ -65,26 +65,27 @@ struct ViewMediaView: View {
                         }
                         Button(action : {
                             let alertHC = UIHostingController(rootView: ConfirmView(item: item).environment(\.managedObjectContext, viewContext))
-                            alertHC.preferredContentSize = CGSize(width: 300, height: 115)
+                            alertHC.preferredContentSize = CGSize(width: 320, height: 115)
                             alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
                             UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
                         })
                         {
                             Text("x")
+                                .font(.system(size: 20.0))
                                 .foregroundColor(.white)
                                 .frame(width: 40, height: 40)
                                 .background(Color.black)
                                 .cornerRadius(100)
-                        }.offset(x: 15, y: 40)
+                        }.offset(x: 15, y: 45)
                     }.padding(.top, -10)
                     Button(action : {
                         let alertHC = UIHostingController(rootView: AlertView(item: item).environment(\.managedObjectContext, viewContext))
-                        alertHC.preferredContentSize = CGSize(width: 300, height: 175)
+                        alertHC.preferredContentSize = CGSize(width: 500, height: 175)
                         alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
                         UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
                     })
                     {
-                        Text(item.name!).padding(10)
+                        Text(item.name!).padding(10).padding(.top, -5).font(.system(size: 20.0)).foregroundColor(Color.black)
                     }
                 }
             }
@@ -110,13 +111,13 @@ struct ConfirmView: View {
                     let _ = viewContext.delete(item)
                     try? viewContext.save()
                 }) {
-                    Text("Yes").frame(width: 140, height: 30)
+                    Text("Yes").frame(width: 150, height: 30)
                 }.padding(.bottom,5)
                 Divider()
                 Button(action: {
                     UIApplication.shared.windows[0].rootViewController?.dismiss(animated: true, completion: {})
                 }) {
-                    Text("No").frame(width: 140, height: 30)
+                    Text("No").frame(width: 150, height: 30).foregroundColor(Color.red)
                 }.padding(.bottom, 5)
             }.frame(height: 40).padding(0)
             }.background(Color(white: 0.9))
@@ -131,8 +132,9 @@ struct AlertView: View {
     var body: some View {
         VStack {
             Text("Rename Media").font(.headline).padding(.top, 20).padding(.bottom, 0)
-
-            TextField("Name...", text: $text).textFieldStyle(RoundedBorderTextFieldStyle()).padding()
+            TextField("Name...", text: $text)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding().padding(.trailing, 10).padding(.leading, 10)
             Divider()
             HStack {
                 Button(action: {
@@ -148,13 +150,13 @@ struct AlertView: View {
                         }
                     }
                 }) {
-                    Text("Save").frame(width: 140, height: 30)
+                    Text("Save").frame(width: 240, height: 30)
                 }.padding(.bottom, 5)
                 Divider()
                 Button(action: {
                     UIApplication.shared.windows[0].rootViewController?.dismiss(animated: true, completion: {})
                 }) {
-                    Text("Cancel").frame(width: 140, height: 30)
+                    Text("Cancel").frame(width: 240, height: 30)
                 }.padding(.bottom,5)
             }.frame(height: 40).padding(0)
         }.background(Color(white: 0.9))

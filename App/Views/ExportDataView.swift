@@ -20,7 +20,7 @@ struct ExportDataView: View {
         var coordData: FetchedResults<DrawingData>
     var body: some View {
         VStack(alignment: .leading) {
-            Text("ApplePencil Recorded Datasets").foregroundColor(Color.gray)
+            Text("ApplePencil Recorded Datasets").foregroundColor(Color.gray).font(.system(size: 20.0))
             List {
                 Section {
                     ForEach(coordData, id: \.self) { x in
