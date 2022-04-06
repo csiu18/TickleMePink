@@ -2,7 +2,7 @@
 //  Screen+CoreDataProperties.swift
 //  App
 //
-//  Created by Anthony Tranduc on 3/10/22.
+//  Created by Anthony Tranduc on 4/5/22.
 //
 //
 
@@ -16,9 +16,9 @@ extension Screen {
         return NSFetchRequest<Screen>(entityName: "Screen")
     }
 
-    @NSManaged public var type: Int64
     @NSManaged public var instructions: String?
-    @NSManaged public var media: Data?
+    @NSManaged public var type: Int64
+    @NSManaged public var media: Media?
 
 }
 

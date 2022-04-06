@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="20G224" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21D62" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="DrawingData" representedClassName="DrawingData" syncable="YES">
         <attribute name="identifier" optional="YES" attributeType="String"/>
         <attribute name="strokes" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
@@ -15,8 +15,8 @@
     </entity>
     <entity name="Screen" representedClassName="Screen" syncable="YES">
         <attribute name="instructions" optional="YES" attributeType="String"/>
-        <attribute name="media" optional="YES" attributeType="Binary"/>
         <attribute name="type" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="media" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Media"/>
     </entity>
     <entity name="TrialSettings" representedClassName="TrialSettings" syncable="YES">
         <attribute name="partCondition" optional="YES" attributeType="String"/>
