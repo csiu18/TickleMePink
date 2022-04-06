@@ -20,27 +20,31 @@ struct ExportDataView: View {
     @FetchRequest(entity: DrawingData.entity(), sortDescriptors: [])
         var coordData: FetchedResults<DrawingData>
     var body: some View {
-        NavigationView {
-            VStack(alignment: .trailing) {
-                List {
-                    Section {
-                        ForEach(coordData, id: \.self) { x in
-                            Text(x.identifier!).onTapGesture {
-                                prevItem = InventoryItem(id: x.identifier!, dData: x)
-                                showPop = true
-                            }
-                        }.onDelete(perform: deleteStrokes(at:))
-                        
-                    }
-                }.navigationBarTitle("ApplePencil Recorded Datasets")
-                    .toolbar {
-                        EditButton()
-                    }
-                    .sheet(item: $prevItem) { item in
-                        popoverView(x: item.id, dData: item.dData)
-                        }
-                    }
-        }.navigationViewStyle(StackNavigationViewStyle())
+        VStack(alignment: .leading) {
+            Text("ApplePencil Recorded Datasets").foregroundColor(Color.gray).font(.system(size: 20.0))
+            List {
+                Section {
+                    ForEach(coordData, id: \.self) { x in
+                        Text(x.identifier!).onTapGesture {
+                            prevItem = InventoryItem(id: x.identifier!, dData: x)
+                            showPop = true
+                        }.foregroundColor(Color.blue)
+                    }.onDelete(perform: deleteStrokes(at:))
+                }
+            }.overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.gray, lineWidth: 1)
+            )
+                .toolbar {
+                    EditButton()
+                }
+                .sheet(item: $prevItem) { item in
+                    popoverView(x: item.id, dData: item.dData)
+                }
+        }.navigationTitle("Export Data")
+        .navigationBarTitleDisplayMode(.inline)
+        .padding(40).padding(.top, 0)
+        Spacer()
     }
     
     func deleteStrokes(at offsets: IndexSet) {
@@ -70,27 +74,20 @@ struct popoverView: View {
     }
     var body: some View {
         VStack{
-            Spacer()
-            HStack {
-                Spacer()
-                TextField(text: $exportName, prompt: Text(x)) {
-                    Text("File Name")
-                }
-                Spacer()
-            }
-            Spacer()
+            TextField(text: $exportName, prompt: Text("Name Your File..")) {
+                Text("File Name")
+            }.multilineTextAlignment(.center).padding(.top, 30).padding(.bottom, -35)
             List {
                 ForEach(dData.strokes as! [[CGFloat]], id: \.self) { point in
                     VStack {
                         Text("\(point[0]), \(point[1]), \(point[2])")
                     }
                 }
-            }
+            }.padding(15).padding(.top, 0)
             Button(action: {exportButton(points: dData.strokes as! [[CGFloat]], fileName: exportName, defaultName: dData.identifier!)}) {
                 Label("Export", systemImage: "folder")
-            }
-            Spacer()
-        }
+            }.padding(.bottom, 20)
+        }.background(Color(white: 0.95))
     }
     func exportButton(points: [[CGFloat]], fileName: String, defaultName: String) {
         presentationMode.wrappedValue.dismiss()

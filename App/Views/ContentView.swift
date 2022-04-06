@@ -9,33 +9,49 @@ import SwiftUI
 
 
 struct ContentView: View {
+    init() {
+        UINavigationBar.appearance().titleTextAttributes = [.font: UIFont.systemFont(ofSize: 25, weight: UIFont.Weight.bold)]
+    }
+    
     var body: some View {
         NavigationView {
-            VStack(spacing: 20){
+            VStack(spacing: 25){
                 NavigationLink(destination: UploadMediaView()) {
-                    Text("Upload Media")
+                    Text("Upload Media").font(.title).fontWeight(.medium).foregroundColor(Color.black)
                 }
                 NavigationLink(destination: ViewMediaView()) {
-                    Text("View Media")
+                    Text("View Media").font(.title).fontWeight(.medium).foregroundColor(Color.black)
                 }
                 NavigationLink(destination: CreateTrialSettingsView()) {
-                    Text("Create Trial Settings")
+                    Text("Create Trial Settings").font(.title).fontWeight(.medium).foregroundColor(Color.black)
                 }
                 NavigationLink(destination: EditTrialSettingsView()) {
-                    Text("Edit Trial Settings")
+                    Text("Edit Trial Settings").font(.title).fontWeight(.medium).foregroundColor(Color.black)
                 }
                 NavigationLink(destination: StartATrialView()) {
-                    Text("Start a Trial")
+                    Text("Start a Trial").font(.title).fontWeight(.medium).foregroundColor(Color.black)
                 }
                 NavigationLink(destination: ExportDataView()) {
-                    Text("Export Data")
+                    Text("Export Data").font(.title).fontWeight(.medium).foregroundColor(Color.black)
                 }
-            }
-            .navigationTitle("Menu")
-            .navigationBarTitleDisplayMode(.inline)
+            }.padding(.top, -50)
         }.navigationViewStyle(StackNavigationViewStyle())
         
     }
+}
+
+struct NavigationConfigurator: UIViewControllerRepresentable {
+    var configure: (UINavigationController) -> Void = { _ in }
+
+    func makeUIViewController(context: UIViewControllerRepresentableContext<NavigationConfigurator>) -> UIViewController {
+        UIViewController()
+    }
+    func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<NavigationConfigurator>) {
+        if let nc = uiViewController.navigationController {
+            self.configure(nc)
+        }
+    }
+
 }
 
 struct ContentView_Previews: PreviewProvider {
