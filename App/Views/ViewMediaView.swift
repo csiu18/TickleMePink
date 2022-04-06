@@ -29,22 +29,21 @@ struct ViewMediaView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
-    private var gridItems = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-    
     @FetchRequest(entity: Media.entity(), sortDescriptors: [])
         var mediaData: FetchedResults<Media>
+    
+    private var gridItems = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
     var body: some View {
         LazyVGrid(columns: gridItems, spacing: 10) {
             ForEach(mediaData.indices, id: \.self) { i in
                 let item =  mediaData[i]
-                let mediaName = item.name
                 VStack {
                     ZStack (alignment: .topTrailing) {
                         VStack(spacing: 10) {
                             Text("x")
                                 .foregroundColor(Color.white)
-                                .frame(width:40,height:40)
+                                .frame(width: 40, height: 40)
                                 .background(Color.clear)
                                 .offset(x: 15, y: 40)
                             Button(action : {
@@ -73,7 +72,7 @@ struct ViewMediaView: View {
                         {
                             Text("x")
                                 .foregroundColor(.white)
-                                .frame(width:40,height:40)
+                                .frame(width: 40, height: 40)
                                 .background(Color.black)
                                 .cornerRadius(100)
                         }.offset(x: 15, y: 40)
@@ -85,9 +84,7 @@ struct ViewMediaView: View {
                         UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
                     })
                     {
-                        Text(mediaName!)
-                        .minimumScaleFactor(0.5)
-                        .padding(10)
+                        Text(item.name!).padding(10)
                     }
                 }
             }
@@ -106,26 +103,21 @@ struct ConfirmView: View {
     var body: some View {
         VStack {
             Text("Are you sure you want to delete?").font(.headline).padding(.top, 20).padding(.bottom, 20)
-
             Divider()
             HStack {
-                Spacer()
                 Button(action: {
                     UIApplication.shared.windows[0].rootViewController?.dismiss(animated: true, completion: {})
                     let _ = viewContext.delete(item)
                     try? viewContext.save()
                 }) {
-                    Text("Yes")
+                    Text("Yes").frame(width: 140, height: 30)
                 }.padding(.bottom,5)
-                Spacer()
                 Divider()
-                Spacer()
                 Button(action: {
                     UIApplication.shared.windows[0].rootViewController?.dismiss(animated: true, completion: {})
                 }) {
-                    Text("No")
-                }.padding(.bottom,5)
-                Spacer()
+                    Text("No").frame(width: 140, height: 30)
+                }.padding(.bottom, 5)
             }.frame(height: 40).padding(0)
             }.background(Color(white: 0.9))
     }
@@ -138,12 +130,11 @@ struct AlertView: View {
     
     var body: some View {
         VStack {
-            Text("Enter Media Name").font(.headline).padding(.top, 20).padding(.bottom, 0)
+            Text("Rename Media").font(.headline).padding(.top, 20).padding(.bottom, 0)
 
             TextField("Name...", text: $text).textFieldStyle(RoundedBorderTextFieldStyle()).padding()
             Divider()
             HStack {
-                Spacer()
                 Button(action: {
                     UIApplication.shared.windows[0].rootViewController?.dismiss(animated: true, completion: {})
             
@@ -157,19 +148,16 @@ struct AlertView: View {
                         }
                     }
                 }) {
-                    Text("Save")
-                }.padding(.bottom,5)
-                Spacer()
+                    Text("Save").frame(width: 140, height: 30)
+                }.padding(.bottom, 5)
                 Divider()
-                Spacer()
                 Button(action: {
                     UIApplication.shared.windows[0].rootViewController?.dismiss(animated: true, completion: {})
                 }) {
-                    Text("Cancel")
+                    Text("Cancel").frame(width: 140, height: 30)
                 }.padding(.bottom,5)
-                Spacer()
             }.frame(height: 40).padding(0)
-            }.background(Color(white: 0.9))
+        }.background(Color(white: 0.9))
     }
 }
 
