@@ -18,6 +18,9 @@ extension DrawingData {
 
     @NSManaged public var strokes: NSObject?
     @NSManaged public var identifier: String?
+    @NSManaged public var pointTimes: NSObject?
+    @NSManaged public var trialDate: String?
+    @NSManaged public var partCond: String?
 }
 
 extension DrawingData : Identifiable {
