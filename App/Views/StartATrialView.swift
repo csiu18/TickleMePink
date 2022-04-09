@@ -21,6 +21,7 @@ struct StartATrialView: View {
     @State private var screenLength = -1
     @State private var screenIndex = 0
     @State private var partNumber = ""
+    @FocusState private var tfFocus: Bool
     @Environment(\.managedObjectContext) var viewContext
     @FetchRequest(entity: TrialSettings.entity(), sortDescriptors: [])
         var trialSettings:FetchedResults<TrialSettings>
@@ -41,7 +42,7 @@ struct StartATrialView: View {
         VStack(spacing: 20){
             VStack(alignment: .leading) {
                 Text("Participant Number")
-                TextField("", text: $partNumber).textFieldStyle(.roundedBorder)
+                TextField("", text: $partNumber).textFieldStyle(.roundedBorder).focused($tfFocus)
                 Text("Participant Condition")
                 Picker("", selection: $partCondIndex) {
                     Text("Select Participant Condition...").tag(-1)
@@ -86,7 +87,10 @@ struct StartATrialView: View {
             }
             HStack {
                 Spacer().frame(maxWidth: .infinity)
-                Button(action: startTrial, label: {
+                Button(action: {
+                    tfFocus = false
+                    startTrial()
+                }, label: {
                     Text("Start Trial")
                         .padding(8)
                         .foregroundColor(Color.white)
