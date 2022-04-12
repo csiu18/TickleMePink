@@ -36,24 +36,26 @@ struct CreateTrialSettingsView: View {
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
                         ForEach(self.screens.indices, id: \.self){ index in
-                            switch self.screens[index].type{
-                                case 0:
-                                    Button {
-                                        editScreen(toBeEdited: index)
-                                    } label: {
-                                        Rectangle()
-                                            .stroke(Color.black, lineWidth: 2)
-                                            .foregroundColor(Color.white)
-                                            .frame(width: 250, height: 185)
-                                            .overlay(Text("Instructions").foregroundColor(.black))
-                                    }
-                                default:
+                            if self.screens[index].type == 0 {
+                                Button {
+                                    editScreen(toBeEdited: index)
+                                } label: {
                                     Rectangle()
                                         .stroke(Color.black, lineWidth: 2)
                                         .foregroundColor(Color.white)
                                         .frame(width: 250, height: 185)
-                                        .overlay(Text("No Type").foregroundColor(.white))
-                            
+                                        .overlay(Text("Instructions").foregroundColor(.black))
+                                }
+                            } else {
+                                Button {
+                                    editScreen(toBeEdited: index)
+                                } label: {
+                                    Image(uiImage: UIImage(data: self.screens[index].media!.data!)!)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 250, height: 185)
+                                        .border(Color.black, width: 2)
+                                }
                             }
                             Image(systemName: "arrow.right")
                         }
