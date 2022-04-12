@@ -15,6 +15,7 @@ struct EditTrialSettingsView: View {
         sortDescriptors: [NSSortDescriptor(key: "partCondition", ascending: true)]
     ) var trialSettings: FetchedResults<TrialSettings>
     
+    @State private var partCondition: String = ""
     @State private var partCondIndex: Int = -1
     @State private var isCreateModalPresented = false
     @State private var isEditModalPresented = false
@@ -42,8 +43,15 @@ struct EditTrialSettingsView: View {
                             self.screens = []
                         }
                     }
-                }.padding(.bottom, 50)
-            
+                }.padding(.bottom, self.partCondIndex == -1 ? 50 : 10)
+                
+                if (self.partCondIndex != -1) {
+                    Text("New Participant Condition")
+                    TextField("", text:$partCondition)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.bottom, 50)
+                }
+                
                 Text("Trial Sequence")
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
@@ -115,11 +123,15 @@ struct EditTrialSettingsView: View {
     }
     
     func saveSequence() {
-        if self.partCondIndex != -1 {
+        if (self.partCondIndex != -1) {
             let currSettings = trialSettings[self.partCondIndex]
             
             let orderedSet = NSOrderedSet(array: self.screens)
             currSettings.screenToTrialSettings = orderedSet
+            
+            if (self.partCondition != "") {
+                currSettings.partCondition = self.partCondition
+            }
             
             do {
                 try self.viewContext.save()
