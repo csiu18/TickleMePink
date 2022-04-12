@@ -68,11 +68,13 @@ struct popoverView: View {
     var dData: DrawingData
     var trialStrokes: [[[CGFloat]]]
     var timeStamps: [[TimeInterval]]
+    var screenNames: [String]
     init(x: String, dData: DrawingData) {
         self.x = x
         self.dData = dData
         self.trialStrokes = dData.strokes as! [[[CGFloat]]]
         self.timeStamps = dData.pointTimes as! [[TimeInterval]]
+        self.screenNames = dData.screenNames as! [String]
         self.exportName = x
     }
     var body: some View {
@@ -85,14 +87,14 @@ struct popoverView: View {
                 Text("Participant Condition: \(dData.partCond!)")
                 Text("Date Recorded: \(dData.trialDate!)")
                 Text("-------------------------------------------------------------------")
-                Text("x,y,time(sec)")
+                Text("screen,x,y,time(sec)")
                 ForEach(0 ..< trialStrokes.count, id: \.self) { currentIndex in
                     let currentStroke = trialStrokes[currentIndex]
                     let currentTimes = timeStamps[currentIndex]
                     ForEach(0 ..< currentStroke.count, id: \.self) { i in
                         let point = currentStroke[i]
                         let currentTime = currentTimes[i]
-                        Text("\(point[0]),\(point[1]),\(currentTime)" as String)
+                        Text("\(self.screenNames[currentIndex]),\(point[0]),\(point[1]),\(currentTime)" as String)
                     }
                     Text("-------------------------------------------------------------------")
                 }
@@ -102,40 +104,6 @@ struct popoverView: View {
             }.padding(.bottom, 20)
         }.background(Color(white: 0.95))
     }
-    
-    /*
-    func exportButton(points: [[CGFloat]], fileName: String, defaultName: String) {
-        presentationMode.wrappedValue.dismiss()
-        var tester = ""
-        for point in points {
-            tester = tester + "(" + (point[0].description) + ")" + ", "
-        }
-        tester.removeLast()
-        tester.removeLast()
-        var name = fileName
-        if (name == "") {
-            name = defaultName
-        }
-        let directory = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name + ".txt")
-        do {
-            try tester.write(to: directory!, atomically: true, encoding: .utf8)
-        } catch {
-            print("Error in export: \(error.localizedDescription)")
-        }
-        var filesToShare = [Any]()
-        filesToShare.append(directory!)
-        /* Delaying the new popup because before the popup was showing before
-         * the other popup finished dismissing.
-         */
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            let actView = UIActivityViewController(activityItems: filesToShare, applicationActivities: nil)
-            actView.popoverPresentationController?.sourceView = UIView()
-            let conScenes = UIApplication.shared.connectedScenes.first
-            let windowSc = conScenes as? UIWindowScene
-            windowSc?.keyWindow?.rootViewController?.present(actView, animated: true, completion: nil)
-        }
-    }
-     */
     func exportButton(strokeSet: [[[CGFloat]]], timeSet: [[TimeInterval]], fileName: String, defaultName: String) {
         presentationMode.wrappedValue.dismiss()
         var name = fileName
@@ -156,11 +124,11 @@ struct popoverView: View {
             for j in 0..<currStroke.count {
                 let point = currStroke[j]
                 let time = currTimes[j]
-                writtenString = writtenString + "\(point[0]),\(point[1]),\(time)\n"
+                writtenString = writtenString + "\(self.screenNames[i])\(point[0]),\(point[1]),\(time)\n"
                 //fileHandle.seekToEndOfFile()
                 //fileHandle.write(writtenString.data(using: .utf8)!)
             }
-            writtenString = writtenString + "-----------------------------------------------------------\n"
+            //writtenString = writtenString + "-----------------------------------------------------------\n"
         }
         do {
             try writtenString.write(to: directory!, atomically: true, encoding: .utf8)

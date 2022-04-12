@@ -21,6 +21,7 @@ extension DrawingData {
     @NSManaged public var pointTimes: NSObject?
     @NSManaged public var trialDate: String?
     @NSManaged public var partCond: String?
+    @NSManaged public var screenNames: NSObject?
 }
 
 extension DrawingData : Identifiable {

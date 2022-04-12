@@ -4,6 +4,7 @@
         <attribute name="identifier" optional="YES" attributeType="String"/>
         <attribute name="partCond" optional="YES" attributeType="String"/>
         <attribute name="pointTimes" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
+        <attribute name="screenNames" optional="YES" attributeType="Transformable"/>
         <attribute name="strokes" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="trialDate" optional="YES" attributeType="String"/>
     </entity>
@@ -26,7 +27,7 @@
         <relationship name="screenToTrialSettings" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Screen"/>
     </entity>
     <elements>
-        <element name="DrawingData" positionX="-63" positionY="-9" width="128" height="104"/>
+        <element name="DrawingData" positionX="-63" positionY="-9" width="128" height="119"/>
         <element name="Item" positionX="-63" positionY="-18" width="128" height="44"/>
         <element name="Media" positionX="0" positionY="63" width="128" height="89"/>
         <element name="Screen" positionX="-18" positionY="36" width="128" height="74"/>

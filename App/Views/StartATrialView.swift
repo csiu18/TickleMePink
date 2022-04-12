@@ -134,6 +134,7 @@ struct TrialView: View {
     @Environment(\.managedObjectContext) var viewContext
     @State var trialStrokes: [[PKStroke]] = []
     @State var partCond: String
+    @State var screenNames: [String] = []
     
     var body: some View {
         if screenIndex < screenLength {
@@ -201,13 +202,17 @@ struct TrialView: View {
                 List {
                     Text("Participant Number: \(self.partNum)")
                     Text("Participant Condition: \(self.partCond)")
+                    Text("-----------------------------------------------------")
+                    Text("Screen,x,y,time(sec)")
                     ForEach(0 ..< trialStrokes.count, id: \.self) { currentStrokes in
+                        Text("\(self.screenNames[currentStrokes])")
                         List {
                             ForEach(0 ..< trialStrokes[currentStrokes].count, id: \.self) { i in
                                 let strokes = trialStrokes[currentStrokes]
                                 let path = strokes[i].path
                                 ForEach(0 ..< path.count, id: \.self) { j in
-                                    Text("\(path[j].location) and \(path[j].timeOffset + strokeStamps[currentStrokes][i])" as String)
+                                    let currPoint = path[j].location
+                                    Text("\(self.screenNames[currentStrokes]),\(currPoint.x),\(currPoint.y),\(path[j].timeOffset + strokeStamps[currentStrokes][i])" as String)
                                 }
                             }
                         }.overlay(
@@ -282,6 +287,7 @@ struct TrialView: View {
         dData.trialDate = date
         dData.pointTimes = timeStamps as NSObject?
         dData.partCond = self.partCond
+        dData.screenNames = self.screenNames as NSObject?
         do {
             try self.viewContext.save()
         } catch {
@@ -301,6 +307,7 @@ struct TrialView: View {
         if !strokeStart.isEmpty {
             strokeStamps.append(strokeStart)
             strokeStart = []
+            screenNames.append("Screen\(self.screenIndex)")
         }
     }
 }
