@@ -42,8 +42,20 @@ struct EditTrialSettingsModalView: View {
             }
             
             Spacer()
-            Button("Done", action: saveScreen).padding(.top, 20)
+            HStack {
+                Button("Done", action: saveScreen).padding(.top, 20)
+                Button("Remove", role: .destructive, action: deleteScreen).padding(.top, 20)
+            }
         }
+    }
+    
+    func deleteScreen() {
+        if (self.screen != nil) {
+            self.viewContext.delete(self.screen!)
+            self.screens.remove(at: self.screenIndex)
+        }
+        
+        self.isModalPresented = false
     }
     
     func saveScreen() {
