@@ -77,7 +77,7 @@ struct CreateTrialSettingsModalView: View {
             if self.selectedType == 0 {
                 TextEditor(text: $instructions)
             } else {
-                MediaPreviewView(selectedMediaIndex: $selectedMediaIndex, mediaData: mediaData)
+                    MediaPreviewView(selectedMediaIndex: $selectedMediaIndex, mediaData: mediaData)
             }
             
             Spacer()

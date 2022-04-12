@@ -64,7 +64,6 @@ struct EditTrialSettingsView: View {
                                 } label: {
                                     Image(uiImage: UIImage(data: self.screens[index].media!.data!)!)
                                         .resizable()
-                                        .scaledToFit()
                                         .frame(width: 250, height: 185)
                                         .border(Color.black, width: 2)
                                 }
