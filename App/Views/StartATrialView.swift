@@ -8,11 +8,15 @@
 import UIKit
 import PencilKit
 import SwiftUI
+import AVFoundation
+import AVKit
 
 private var cView: PKCanvasView?
 private var startTime: NSDate?
 private var strokeStamps: [[TimeInterval]] = []
 private var strokeStart: [TimeInterval] = []
+private var currentMediaName: String?
+private var currentMediaType: Int?
 
 struct StartATrialView: View {
     @State private var presentingTrial = false
@@ -140,7 +144,11 @@ struct TrialView: View {
         if screenIndex < screenLength {
             let currType = screens[screenIndex].type
             let currThing:String = screens[screenIndex].instructions!
-            if currType == 0 && currThing != "Testing2" {
+            
+            //CURRENTLY HARD-CODED
+            //When an instruction says "Testing2" it loads an image
+            //When an instruction says "Testing5" it loads a video
+            if currType == 0 && currThing != "Testing2" && currThing != "Testing5"{
                 VStack {
                     HStack {
                         Spacer().frame(maxWidth: .infinity)
@@ -157,8 +165,8 @@ struct TrialView: View {
                     Text(screens[screenIndex].instructions!)
                     Spacer()
                 }
-            } else if currType == 1 || currThing == "Testing2" {
-                //static
+            } else if currType == 1 && currThing != "Testing2" && currThing != "Testing5"{
+                // [IMAGE]
                 HStack {
                     Spacer().frame(maxWidth: .infinity)
                     Button(action: incrAndRefresh, label: {
@@ -170,8 +178,22 @@ struct TrialView: View {
                     })
                     Spacer()
                 }.padding(10)
-                StartATrialView1()
-            } else if currType == 2 {
+                StartATrialView1(mediaName: "",mediaType: -1)
+            } else if currType == 2 || currThing == "Testing2" {
+                // [VIDEO]
+                HStack {
+                    Spacer().frame(maxWidth: .infinity)
+                    Button(action: incrAndRefresh, label: {
+                        Text("Next")
+                            .padding(10)
+                            .foregroundColor(Color.white)
+                            .background(Color.red)
+                            .cornerRadius(4)
+                    })
+                    Spacer()
+                }.padding(10)
+                StartATrialView1(mediaName: "Image_created_with_a_mobile_phone.png", mediaType: 1)
+            } else if currThing == "Testing5" {
                 //interactive
                 HStack {
                     Spacer().frame(maxWidth: .infinity)
@@ -184,7 +206,7 @@ struct TrialView: View {
                     })
                     Spacer()
                 }.padding(10)
-                StartATrialView1()
+                StartATrialView1(mediaName: "idiotsincars", mediaType: 2)
             } else {
                 Text("[currType]: Screen Type Error")
                 Button("Close") {
@@ -312,22 +334,26 @@ struct TrialView: View {
     }
 }
 
-struct MediaView: View {
-    @Binding var presentingMedia: Bool
-    var body: some View {
-        VStack{
-            StartATrialView1()
-            
-        }
-    }
-}
-
 struct StartATrialView1: UIViewControllerRepresentable {
+    public var mediaName: String
+    public var mediaType: Int
     func makeUIViewController(context: Context) -> UIViewController {
+        currentMediaName = mediaName
+        currentMediaType = mediaType
         return ViewController()
     }
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     
+    }
+}
+
+struct VideoView: View {
+    let player = AVPlayer(url: Bundle.main.url(forResource: "idiotsincars", withExtension: "mp4")!)
+    init() {
+        player.isMuted = true
+    }
+    var body: some View {
+        VideoPlayer(player: player)
     }
 }
 
@@ -348,8 +374,26 @@ class ViewController: UIViewController {
         cView = canvasView
         canvasView.delegate = self
         canvasView.drawingPolicy = .anyInput  // uncomment to test on anyput, comment for apple pencil
+        canvasView.isOpaque = false
         canvasView.becomeFirstResponder()
-        view.addSubview(canvasView)
+        //view.addSubview(canvasView)
+        if currentMediaType == 1 {
+            // [IMAGE]
+            view.addSubview(canvasView)
+            let imgView = UIImageView(image: UIImage(named: currentMediaName!))
+            let subView = cView!.subviews[0]
+            subView.addSubview(imgView)
+            subView.sendSubviewToBack(imgView)
+        } else if currentMediaType == 2 {
+            // [VIDEO]
+            let player = AVPlayer(url: Bundle.main.url(forResource: currentMediaName, withExtension: "mp4")!)
+            let vidLayer = AVPlayerLayer(player: player)
+            //vidLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+            vidLayer.frame = self.view.frame
+            self.view.layer.addSublayer(vidLayer)
+            player.play()
+            view.addSubview(cView!)
+        }
     }
 }
 
