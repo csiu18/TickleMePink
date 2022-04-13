@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		13A557E827F7576900D798F1 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13A557E727F7576900D798F1 /* ImagePicker.swift */; };
 		1DE4A63927FC171D005CF3C5 /* EditTrialSettingsModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DE4A63827FC171D005CF3C5 /* EditTrialSettingsModalView.swift */; };
+		226CF003280699A8005704CC /* idiotsincars.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 226CF002280699A8005704CC /* idiotsincars.mp4 */; };
 		22B9A9B727DC36CA00EF754F /* DrawingData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B9A9B527DC36CA00EF754F /* DrawingData+CoreDataClass.swift */; };
 		22B9A9B827DC36CA00EF754F /* DrawingData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B9A9B627DC36CA00EF754F /* DrawingData+CoreDataProperties.swift */; };
-		22F33A6D280698F00039830D /* idiotsincars.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 22F33A6C280698F00039830D /* idiotsincars.mp4 */; };
 		2F490AEF27CD44370096C86B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 2F490AEE27CD44370096C86B /* .gitignore */; };
 		2F490AF327CE8FFF0096C86B /* .gitattributes in Resources */ = {isa = PBXBuildFile; fileRef = 2F490AF227CE8FFF0096C86B /* .gitattributes */; };
 		2FF5C02E27D84F4900404235 /* TrialSettings+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF5C02A27D84F4900404235 /* TrialSettings+CoreDataClass.swift */; };
@@ -37,9 +37,9 @@
 /* Begin PBXFileReference section */
 		13A557E727F7576900D798F1 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		1DE4A63827FC171D005CF3C5 /* EditTrialSettingsModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTrialSettingsModalView.swift; sourceTree = "<group>"; };
+		226CF002280699A8005704CC /* idiotsincars.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = idiotsincars.mp4; path = ../../../../../../Downloads/idiotsincars.mp4; sourceTree = "<group>"; };
 		22B9A9B527DC36CA00EF754F /* DrawingData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DrawingData+CoreDataClass.swift"; sourceTree = "<group>"; };
 		22B9A9B627DC36CA00EF754F /* DrawingData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DrawingData+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		22F33A6C280698F00039830D /* idiotsincars.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = idiotsincars.mp4; path = ../../../../../../.Trash/idiotsincars.mp4; sourceTree = "<group>"; };
 		2F490AEE27CD44370096C86B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		2F490AF227CE8FFF0096C86B /* .gitattributes */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitattributes; sourceTree = "<group>"; };
 		2FF5C02A27D84F4900404235 /* TrialSettings+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrialSettings+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -88,7 +88,7 @@
 				2FF5C03927E026C900404235 /* ModalViewModifier.swift */,
 				13A557E727F7576900D798F1 /* ImagePicker.swift */,
 				1DE4A63827FC171D005CF3C5 /* EditTrialSettingsModalView.swift */,
-				22F33A6C280698F00039830D /* idiotsincars.mp4 */,
+				226CF002280699A8005704CC /* idiotsincars.mp4 */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -206,7 +206,7 @@
 			files = (
 				376E137B27A6FCAE00747303 /* Preview Assets.xcassets in Resources */,
 				2F490AEF27CD44370096C86B /* .gitignore in Resources */,
-				22F33A6D280698F00039830D /* idiotsincars.mp4 in Resources */,
+				226CF003280699A8005704CC /* idiotsincars.mp4 in Resources */,
 				376E137827A6FCAE00747303 /* Assets.xcassets in Resources */,
 				2F490AF327CE8FFF0096C86B /* .gitattributes in Resources */,
 			);
