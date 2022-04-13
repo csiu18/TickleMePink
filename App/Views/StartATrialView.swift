@@ -145,10 +145,12 @@ struct TrialView: View {
             let currType = screens[screenIndex].type
             let currThing:String = screens[screenIndex].instructions!
             
+            //[CHANGE CONDITIONS]**************************************
             //CURRENTLY HARD-CODED
             //When an instruction says "Testing2" it loads an image
             //When an instruction says "Testing5" it loads a video
             if currType == 0 && currThing != "Testing2" && currThing != "Testing5"{
+                // [INSTRUCTIONS]
                 VStack {
                     HStack {
                         Spacer().frame(maxWidth: .infinity)
