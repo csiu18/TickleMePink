@@ -7,19 +7,24 @@
 
 import Foundation
 import SwiftUI
- 
+import AVKit
+
+
 extension View {
     public func asUIImage() -> UIImage {
         let controller = UIHostingController(rootView: self)
          
         controller.view.frame = CGRect(x: 0, y: CGFloat(Int.max), width: 1, height: 1)
-        UIApplication.shared.windows.first!.rootViewController?.view.addSubview(controller.view)
+        //UIApplication.shared.windows.first!.rootViewController?.view.addSubview(controller.view)
+        let conScenes = UIApplication.shared.connectedScenes.first
+        let windowSc = conScenes as? UIWindowScene
+        windowSc?.keyWindow?.rootViewController?.view.addSubview(controller.view)
          
         let size = controller.sizeThatFits(in: UIScreen.main.bounds.size)
         controller.view.bounds = CGRect(origin: .zero, size: size)
         controller.view.sizeToFit()
          
-        // here is the call to the function that converts UIView to UIImage: `.asImage()`
+        //converts UIView to UIImage: `.asImage()`
         let image = controller.view.asUIImage()
         controller.view.removeFromSuperview()
         return image
@@ -27,7 +32,7 @@ extension View {
 }
  
 extension UIView {
-// This is the function to convert UIView to UIImage
+//UIView to UIImage
     public func asUIImage() -> UIImage {
         let renderer = UIGraphicsImageRenderer(bounds: bounds)
         return renderer.image { rendererContext in
@@ -40,42 +45,55 @@ struct ImagePicker: UIViewControllerRepresentable {
  
     @Environment(\.presentationMode)
     var presentationMode
- 
+    var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @Binding var image: Image?
     @Binding var url: NSURL?
+    @Binding var isImage: Bool?
  
     class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
  
         @Binding var presentationMode: PresentationMode
         @Binding var image: Image?
         @Binding var url: NSURL?
+        @Binding var isImage: Bool?
  
-        init(presentationMode: Binding<PresentationMode>, image: Binding<Image?>, url: Binding<NSURL?>) {
+        init(presentationMode: Binding<PresentationMode>, image: Binding<Image?>, url: Binding<NSURL?>, isImage: Binding<Bool?>) {
             _presentationMode = presentationMode
             _image = image
             _url = url
+            _isImage = isImage
         }
  
         func imagePickerController(_ picker: UIImagePickerController,
                                    didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            let imageURL = info[UIImagePickerController.InfoKey.imageURL] as! NSURL
-            let _ = print("please fuck work")
-            let _ = print(imageURL)
-            let uiImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-            image = Image(uiImage: uiImage)
-            url = imageURL
+            if let mediaType = info[UIImagePickerController.InfoKey.mediaType] as? String {
+                if mediaType  == "public.image" {
+                    url = info[UIImagePickerController.InfoKey.imageURL] as? NSURL
+                    isImage = true
+                }
+
+                if mediaType == "public.movie" {
+                    url = info[UIImagePickerController.InfoKey.mediaURL] as? NSURL
+                    isImage = false
+                }
+            }
+
+            if let uiImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+                image = Image(uiImage: uiImage)
+            } else {
+                let tempURL = info[UIImagePickerController.InfoKey.mediaURL] as! URL
+                let asset = AVAsset.init(url: tempURL)
+                let generator = AVAssetImageGenerator.init(asset: asset)
+                var time: CMTime = asset.duration
+                time.value = 0
+                let cgImage = try! generator.copyCGImage(at: time, actualTime: nil)
+                let temp = UIImage(cgImage: cgImage) //firstFrame is UIImage in table cell
+                image = Image(uiImage: temp)
+            }
+            
             presentationMode.dismiss()
  
         }
-        
-       /* func imagePickerController(_ picker: UIImagePickerController,
-                                   didFinishPickingMediaWithInfo info: NSURL) {
-            let imageURL = info[UIImagePickerControllerReferenceURL] as! NSURL
-            //let uiImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-            image = Image(uiImage: uiImage)
-            presentationMode.dismiss()
- 
-        } */
  
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             presentationMode.dismiss()
@@ -84,11 +102,14 @@ struct ImagePicker: UIViewControllerRepresentable {
     }
  
     func makeCoordinator() -> Coordinator {
-        return Coordinator(presentationMode: presentationMode, image: $image, url: $url)
+        return Coordinator(presentationMode: presentationMode, image: $image, url: $url, isImage: $isImage)
     }
  
     func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
         let picker = UIImagePickerController()
+        picker.allowsEditing = false
+        picker.sourceType = sourceType
+        picker.mediaTypes = ["public.image", "public.movie"]
         picker.delegate = context.coordinator
         return picker
     }
