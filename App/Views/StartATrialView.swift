@@ -168,7 +168,7 @@ struct TrialView: View {
                     Spacer()
                 }
             } else if currType == 1 && currThing != "Testing2" && currThing != "Testing5"{
-                // [IMAGE]
+                // [IMAGE] (but empty)
                 HStack {
                     Spacer().frame(maxWidth: .infinity)
                     Button(action: incrAndRefresh, label: {
@@ -182,7 +182,7 @@ struct TrialView: View {
                 }.padding(10)
                 StartATrialView1(mediaName: "",mediaType: -1)
             } else if currType == 2 || currThing == "Testing2" {
-                // [VIDEO]
+                // [IMAGE]
                 HStack {
                     Spacer().frame(maxWidth: .infinity)
                     Button(action: incrAndRefresh, label: {
@@ -196,7 +196,7 @@ struct TrialView: View {
                 }.padding(10)
                 StartATrialView1(mediaName: "Image_created_with_a_mobile_phone.png", mediaType: 1)
             } else if currThing == "Testing5" {
-                //interactive
+                // [VIDEO]
                 HStack {
                     Spacer().frame(maxWidth: .infinity)
                     Button(action: incrAndRefresh, label: {
