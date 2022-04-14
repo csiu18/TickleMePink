@@ -335,7 +335,6 @@ struct TrialView: View {
         cView?.drawing = PKDrawing()
         self.presentingTrial = false
         self.screenIndex += 1
-        //currentImageView!.removeFromSuperview()
         self.presentingTrial = true
         if !strokeStart.isEmpty {
             strokeStamps.append(strokeStart)
@@ -427,16 +426,13 @@ class ViewController: UIViewController {
             // [IMAGE]
             print("LOOK HERE")
             view.addSubview(cView!)
-            //let url:URL = URL(string:currentMediaURL!)!
-            //let data = NSData(contentsOf: url)
-            //let imgView = UIImageView(image: UIImage(data: data! as Data))
-            //let imgView.image = UIImage(data: data!)
-            //let nsImage = UIImage(contentsOfFile: URL(string:currentMediaURL!)!.path)
+            let url:URL = URL(string:currentMediaURL!)!
+            let data = NSData(contentsOf: url)
+            let imgView = UIImageView(image: UIImage(data: data! as Data))
+            
+            //let nsImage = UIImage(data: currentImage!)!
             //let imgView = UIImageView(image: nsImage)
-            let nsImage = UIImage(data: currentImage!)!
-            let imgView = UIImageView(image: nsImage)
             let subView = cView!.subviews[0]
-            //subView.subviews[0].removeFromSuperview()
             imgView.frame = CGRect(x: 0, y: 0, width: subView.bounds.width  , height:  subView.bounds.height)
             imgView.contentMode = .scaleAspectFit
             imgView.clipsToBounds = true
@@ -457,45 +453,6 @@ class ViewController: UIViewController {
             view.addSubview(cView!)
         }
     }
-    /*
-    func setupPencilKit() {
-        let canvasView = PKCanvasView(frame: self.view.bounds)
-        cView = canvasView
-        canvasView.delegate = self
-        canvasView.drawingPolicy = .anyInput  // uncomment to test on anyput, comment for apple pencil
-        canvasView.isOpaque = false
-        canvasView.becomeFirstResponder()
-        //view.addSubview(canvasView)
-        print("IN SETUPPENCILKIT")
-        if currentMediaBool! {
-            // [IMAGE]
-            view.addSubview(canvasView)
-            print("LOOK HERE")
-            //let url:URL = URL(string:currentMediaURL!)!
-            //let data = NSData(contentsOf: url)
-            //let imgView = UIImageView(image: UIImage(data: data! as Data))
-            //let imgView.image = UIImage(data: data!)
-            //let nsImage = UIImage(contentsOfFile: URL(string:currentMediaURL!)!.path)
-            //let imgView = UIImageView(image: nsImage)
-            let nsImage = UIImage(data: currentImage!)!
-            let imgView = UIImageView(image: nsImage)
-            let subView = cView!.subviews[0]
-            //subView.subviews[0].removeFromSuperview()
-            print(currentMediaURL)
-            subView.addSubview(imgView)
-            subView.sendSubviewToBack(imgView)
-            currentImageView = imgView
-        } else if !currentMediaBool! {
-            // [VIDEO]
-            let player = AVPlayer(url: URL(string:currentMediaURL!)!)
-            let vidLayer = AVPlayerLayer(player: player)
-            //vidLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-            vidLayer.frame = self.view.frame
-            self.view.layer.addSublayer(vidLayer)
-            player.play()
-            view.addSubview(cView!)
-        }
-    } */
 }
 
 

@@ -70,50 +70,67 @@ struct ImagePicker: UIViewControllerRepresentable {
                 if mediaType  == "public.image" {
                     url = info[UIImagePickerController.InfoKey.imageURL] as? NSURL
                     isImage = true
+                    
+                    let imageURL = info[UIImagePickerController.InfoKey.imageURL] as? URL
+                    let imageData = NSData(contentsOf: imageURL!)
+                    
+                    //Creates Date-Based URL
+                    let today = Date()
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "HHmmssEdMMMy"
+                    let name = formatter.string(from: today)
+                    let dataPath = name + ".jpeg"
+                    
+                    do
+                    {
+                        //  Find Application Support directory
+                        let fileManager = FileManager.default
+                        let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+                        //  Create subdirectory
+                        let directoryURL = appSupportURL.appendingPathComponent("com.myCompany.myApp")
+                        try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+                        //  Create document
+                        let documentURL = directoryURL.appendingPathComponent (dataPath)
+                        url = documentURL as NSURL
+                        try imageData?.write (to: documentURL)
+                    }
+                    catch
+                    {
+                      print("An error occured")
+                    }
                 }
 
                 if mediaType == "public.movie" {
                     url = info[UIImagePickerController.InfoKey.mediaURL] as? NSURL
                     isImage = false
-                    
-                    
-                    
-                    //NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
+                
                     let videoURL = info[UIImagePickerController.InfoKey.mediaURL] as? URL
                     let videoData = NSData(contentsOf: videoURL!)
-                    //NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                     
-                    let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-                    let documentsDirectory: String = paths[0]
-                    let _ = print(documentsDirectory)
-                   /* let today = Date()
+                    //Creates Date-Based URL
+                    let today = Date()
                     let formatter = DateFormatter()
                     formatter.dateFormat = "HHmmssEdMMMy"
                     let name = formatter.string(from: today)
-                    let _ = print("NAME:")
-                    let  _ = print(name)
-                    let clean = name.trimmingCharacters(in: .whitespacesAndNewlines)
-                    let _ = print("CLEAN")
-                    let _ = print(clean) */
-                    let dataPath = documentsDirectory + "/vid2.mp4"
-                    let _ = print("DATAPATH")
-                    let _ = print(dataPath)
-                    //let dataPath = documentsDirectory.appendingPathComponent("/vid1.mp4")
-                    //url = NSURL(string:dataPath)
-                    /*do {
-                        try videoData!.write(to: URL(string:dataPath)!, atomically: true)
-                        let input = try String(contentsOf: URL(string:dataPath)!)
-                        print(input)
-                    } catch {
-                        print(error.localizedDescription)
-                    }*/
-                    videoData?.write(toFile: dataPath, atomically: false)
-                    //self.dismissViewControllerAnimated(true, completion: nil)
+                    let dataPath = name + ".mov"
                     
-                    
-                    //NSString *tempPath = [documentsDirectory stringByAppendingFormat:@"/vid1.mp4"];
-                    //BOOL success = [videoData writeToFile:tempPath atomically:NO];
-                    //[picker dismissModalViewControllerAnimated:YES];
+                    do
+                    {
+                        //  Find Application Support directory
+                        let fileManager = FileManager.default
+                        let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+                        //  Create subdirectory
+                        let directoryURL = appSupportURL.appendingPathComponent("com.myCompany.myApp")
+                        try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+                        //  Create document
+                        let documentURL = directoryURL.appendingPathComponent (dataPath)
+                        url = documentURL as NSURL
+                        try videoData?.write (to: documentURL)
+                    }
+                    catch
+                    {
+                      print("An error occured")
+                    }
                 }
             }
 
