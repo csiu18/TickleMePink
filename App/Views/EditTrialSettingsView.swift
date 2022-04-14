@@ -15,6 +15,7 @@ struct EditTrialSettingsView: View {
         sortDescriptors: [NSSortDescriptor(key: "partCondition", ascending: true)]
     ) var trialSettings: FetchedResults<TrialSettings>
     
+    @State private var partCondition: String = ""
     @State private var partCondIndex: Int = -1
     @State private var isCreateModalPresented = false
     @State private var isEditModalPresented = false
@@ -42,29 +43,38 @@ struct EditTrialSettingsView: View {
                             self.screens = []
                         }
                     }
-                }.padding(.bottom, 50)
-            
+                }.padding(.bottom, self.partCondIndex == -1 ? 50 : 10)
+                
+                if (self.partCondIndex != -1) {
+                    Text("New Participant Condition")
+                    TextField("", text:$partCondition)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.bottom, 50)
+                }
+                
                 Text("Trial Sequence")
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
                         ForEach(self.screens.indices, id: \.self) { index in
-                            switch self.screens[index].type{
-                                case 0:
-                                    Button {
-                                        editScreen(toBeEdited: index)
-                                    } label: {
-                                        Rectangle()
-                                            .stroke(Color.black, lineWidth: 2)
-                                            .foregroundColor(Color.white)
-                                            .frame(width: 250, height: 185)
-                                            .overlay(Text("Instructions").foregroundColor(.black))
-                                    }
-                                default:
+                            if self.screens[index].type == 0{
+                                Button {
+                                    editScreen(toBeEdited: index)
+                                } label: {
                                     Rectangle()
                                         .stroke(Color.black, lineWidth: 2)
                                         .foregroundColor(Color.white)
                                         .frame(width: 250, height: 185)
-                                        .overlay(Text("No Type").foregroundColor(.white))
+                                        .overlay(Text("Instructions").foregroundColor(.black))
+                                }
+                            } else {
+                                Button {
+                                    editScreen(toBeEdited: index)
+                                } label: {
+                                    Image(uiImage: UIImage(data: self.screens[index].media!.data!)!)
+                                        .resizable()
+                                        .frame(width: 250, height: 185)
+                                        .border(Color.black, width: 2)
+                                }
                             
                             }
                             Image(systemName: "arrow.right")
@@ -113,11 +123,15 @@ struct EditTrialSettingsView: View {
     }
     
     func saveSequence() {
-        if self.partCondIndex != -1 {
+        if (self.partCondIndex != -1) {
             let currSettings = trialSettings[self.partCondIndex]
             
             let orderedSet = NSOrderedSet(array: self.screens)
             currSettings.screenToTrialSettings = orderedSet
+            
+            if (self.partCondition != "") {
+                currSettings.partCondition = self.partCondition
+            }
             
             do {
                 try self.viewContext.save()
