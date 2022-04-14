@@ -15,8 +15,9 @@ private var cView: PKCanvasView?
 private var startTime: NSDate?
 private var strokeStamps: [[TimeInterval]] = []
 private var strokeStart: [TimeInterval] = []
-private var currentMediaName: String?
-private var currentMediaType: Int?
+private var currentMediaURL: String?
+private var currentMediaBool: Bool?
+//private var currentImage:
 
 struct StartATrialView: View {
     @State private var presentingTrial = false
@@ -144,12 +145,14 @@ struct TrialView: View {
         if screenIndex < screenLength {
             let currType = screens[screenIndex].type
             let currThing:String = screens[screenIndex].instructions!
+            let mediaURL = screens[screenIndex].media?.url
+            let mediaBool = screens[screenIndex].media?.isImage
             
             //[CHANGE CONDITIONS]**************************************
             //CURRENTLY HARD-CODED
             //When an instruction says "Testing2" it loads an image
             //When an instruction says "Testing5" it loads a video
-            if currType == 0 && currThing != "Testing2" && currThing != "Testing5"{
+            if currType == 0 {
                 // [INSTRUCTIONS]
                 VStack {
                     HStack {
@@ -167,7 +170,7 @@ struct TrialView: View {
                     Text(screens[screenIndex].instructions!)
                     Spacer()
                 }
-            } else if currType == 1 && currThing != "Testing2" && currThing != "Testing5"{
+            /*} else if currType == 1 {
                 // [IMAGE] (but empty)
                 HStack {
                     Spacer().frame(maxWidth: .infinity)
@@ -180,8 +183,8 @@ struct TrialView: View {
                     })
                     Spacer()
                 }.padding(10)
-                StartATrialView1(mediaName: "",mediaType: -1)
-            } else if currType == 2 || currThing == "Testing2" {
+                StartATrialView1(mediaName: "",mediaType: -1) */
+            } else if currType == 2 || mediaBool == true {
                 // [IMAGE]
                 HStack {
                     Spacer().frame(maxWidth: .infinity)
@@ -194,8 +197,8 @@ struct TrialView: View {
                     })
                     Spacer()
                 }.padding(10)
-                StartATrialView1(mediaName: "Image_created_with_a_mobile_phone.png", mediaType: 1)
-            } else if currThing == "Testing5" {
+                StartATrialView1(mediaURL: mediaURL!, mediaBool: mediaBool!)
+            } else if mediaBool == false {
                 // [VIDEO]
                 HStack {
                     Spacer().frame(maxWidth: .infinity)
@@ -208,7 +211,7 @@ struct TrialView: View {
                     })
                     Spacer()
                 }.padding(10)
-                StartATrialView1(mediaName: "idiotsincars", mediaType: 2)
+                StartATrialView1(mediaURL: mediaURL!, mediaBool: mediaBool!)
             } else {
                 Text("[currType]: Screen Type Error")
                 Button("Close") {
@@ -337,11 +340,12 @@ struct TrialView: View {
 }
 
 struct StartATrialView1: UIViewControllerRepresentable {
-    public var mediaName: String
-    public var mediaType: Int
+    public var mediaURL: String
+    public var mediaBool: Bool
     func makeUIViewController(context: Context) -> UIViewController {
-        currentMediaName = mediaName
-        currentMediaType = mediaType
+        currentMediaURL = mediaURL
+        currentMediaBool = mediaBool
+        //currentImage = mediaImage
         return ViewController()
     }
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
@@ -379,16 +383,17 @@ class ViewController: UIViewController {
         canvasView.isOpaque = false
         canvasView.becomeFirstResponder()
         //view.addSubview(canvasView)
-        if currentMediaType == 1 {
+        if currentMediaBool! {
             // [IMAGE]
             view.addSubview(canvasView)
-            let imgView = UIImageView(image: UIImage(named: currentMediaName!))
+            let nsImage = UIImage(contentsOfFile: URL(string:currentMediaURL!)!.path)
+            let imgView = UIImageView(image: nsImage)
             let subView = cView!.subviews[0]
             subView.addSubview(imgView)
             subView.sendSubviewToBack(imgView)
-        } else if currentMediaType == 2 {
+        } else if !currentMediaBool! {
             // [VIDEO]
-            let player = AVPlayer(url: Bundle.main.url(forResource: currentMediaName, withExtension: "mp4")!)
+            let player = AVPlayer(url: URL(string:currentMediaURL!)!)
             let vidLayer = AVPlayerLayer(player: player)
             //vidLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
             vidLayer.frame = self.view.frame
