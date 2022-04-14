@@ -26,7 +26,8 @@ struct EditTrialSettingsModalView: View {
         self._screenIndex = screenIndex
         self._isModalPresented = isModalPresented
         
-        if screenIndex.wrappedValue != -1 {
+        if (screenIndex.wrappedValue < screens.wrappedValue.count
+            && screenIndex.wrappedValue != -1) {
             self._screen = State(initialValue: screens.wrappedValue[screenIndex.wrappedValue])
             self._screenType = State(initialValue: screens.wrappedValue[screenIndex.wrappedValue].type)
             self._instructions = State(initialValue: screens.wrappedValue[screenIndex.wrappedValue].instructions ?? "")
@@ -51,8 +52,8 @@ struct EditTrialSettingsModalView: View {
     
     func deleteScreen() {
         if (self.screen != nil) {
-            self.viewContext.delete(self.screen!)
             self.screens.remove(at: self.screenIndex)
+            self.viewContext.delete(self.screen!)
         }
         
         self.isModalPresented = false
