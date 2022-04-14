@@ -43,7 +43,6 @@ struct UploadMediaView: View {
             TextField("Name media (optional)", text: $text)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding().padding(.trailing, 15).padding(.leading, 15)
-            // show image
             
             // create button to select image
             Button(action: {
@@ -58,6 +57,7 @@ struct UploadMediaView: View {
                     
             }).padding(.bottom, 10)
             
+            // show image
             self.selectedImage?.resizable().scaledToFit()
 
             //show button to upload iamge
@@ -79,7 +79,6 @@ struct UploadMediaView: View {
                 self.selectedImage = Image("")
                 text = ""
                 
-           
             }, label: {
                 Text("Save")
                     .fontWeight(.medium)
@@ -93,12 +92,12 @@ struct UploadMediaView: View {
         .frame(width: 800, height: 600)
         .background(Color(white: 0.95))
         .cornerRadius(15)
+        .shadow(color: Color.black.opacity(0.25), radius: 5, x: 2, y: 3)
     
         .sheet(isPresented: $showImagePicker, content: {
             ImagePicker(image: self.$selectedImage, url: self.$mediaURL, isImage: self.$type)
         })
         .padding(.top, -50)
-//        Spacer()
     }
 }
 
