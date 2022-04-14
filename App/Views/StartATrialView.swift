@@ -18,6 +18,8 @@ private var strokeStart: [TimeInterval] = []
 private var currentMediaName: String?
 private var currentMediaType: Int?
 private var currentViewC: ViewController? = nil
+private var currentImgView: UIImageView?
+private var currentVidLayer: AVPlayerLayer?
 
 struct StartATrialView: View {
     @State private var presentingTrial = false
@@ -405,17 +407,25 @@ class ViewController: UIViewController {
     }
     
     func backgroundView() {
+        if currentImgView != nil {
+            currentImgView?.removeFromSuperview()
+        }
+        if currentVidLayer != nil {
+            currentVidLayer?.removeFromSuperlayer()
+        }
         if currentMediaType == 1 {
             // [IMAGE]
             view.addSubview(cView!)
             let imgView = UIImageView(image: UIImage(named: currentMediaName!))
             let subView = cView!.subviews[0]
+            currentImgView = imgView
             subView.addSubview(imgView)
             subView.sendSubviewToBack(imgView)
         } else if currentMediaType == 2 {
             // [VIDEO]
             let player = AVPlayer(url: Bundle.main.url(forResource: currentMediaName, withExtension: "mp4")!)
             let vidLayer = AVPlayerLayer(player: player)
+            currentVidLayer = vidLayer
             //vidLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
             vidLayer.frame = self.view.frame
             self.view.layer.addSublayer(vidLayer)
