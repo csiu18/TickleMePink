@@ -35,65 +35,67 @@ struct ViewMediaView: View {
     private var gridItems = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
     
     var body: some View {
-        LazyVGrid(columns: gridItems, spacing: 10) {
-            ForEach(mediaData.indices, id: \.self) { i in
-                let item =  mediaData[i]
-                VStack {
-                    ZStack (alignment: .topTrailing) {
-                        VStack(spacing: 10) {
-                            Text("x")
-                                .foregroundColor(Color.white)
-                                .frame(width: 40, height: 40)
-                                .background(Color.clear)
-                                .offset(x: 15, y: 45)
-                            Button(action : {
-                                let alertHC = UIHostingController(rootView: MediaItemView(item: item))
-                                alertHC.view.backgroundColor = .clear
-                                alertHC.preferredContentSize = CGSize(width: 1000, height: 1000)
-                                alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
+        ScrollView {
+            LazyVGrid(columns: gridItems, spacing: 10) {
+                ForEach(mediaData.indices, id: \.self) { i in
+                    let item =  mediaData[i]
+                    VStack {
+                        ZStack (alignment: .topTrailing) {
+                            VStack(spacing: 10) {
+                                Text("x")
+                                    .foregroundColor(Color.white)
+                                    .frame(width: 40, height: 40)
+                                    .background(Color.clear)
+                                    .offset(x: 15, y: 45)
+                                Button(action : {
+                                    let alertHC = UIHostingController(rootView: MediaItemView(item: item))
+                                    alertHC.view.backgroundColor = .clear
+                                    alertHC.preferredContentSize = CGSize(width: 1000, height: 1000)
+                                    alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
 
-                                UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
-                            }) {
-                                Image(uiImage: UIImage(data: item.data!)!)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 150)
-                                    .cornerRadius(10)
-                                    .padding(.top, 10)
-                                    .padding(.bottom, 5)
+                                    UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
+                                }) {
+                                    Image(uiImage: UIImage(data: item.data!)!)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 150)
+                                        .cornerRadius(10)
+                                        .padding(.top, 10)
+                                        .padding(.bottom, 5)
+                                }
                             }
-                        }
+                            Button(action : {
+                                let alertHC = UIHostingController(rootView: ConfirmView(item: item).environment(\.managedObjectContext, viewContext))
+                                alertHC.preferredContentSize = CGSize(width: 320, height: 115)
+                                alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
+                                UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
+                            })
+                            {
+                                Text("x")
+                                    .font(.system(size: 20.0))
+                                    .foregroundColor(.white)
+                                    .frame(width: 40, height: 40)
+                                    .background(Color.black)
+                                    .cornerRadius(100)
+                            }.offset(x: 15, y: 45)
+                        }.padding(.top, -10)
                         Button(action : {
-                            let alertHC = UIHostingController(rootView: ConfirmView(item: item).environment(\.managedObjectContext, viewContext))
-                            alertHC.preferredContentSize = CGSize(width: 320, height: 115)
+                            let alertHC = UIHostingController(rootView: AlertView(item: item).environment(\.managedObjectContext, viewContext))
+                            alertHC.preferredContentSize = CGSize(width: 500, height: 175)
                             alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
                             UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
                         })
                         {
-                            Text("x")
-                                .font(.system(size: 20.0))
-                                .foregroundColor(.white)
-                                .frame(width: 40, height: 40)
-                                .background(Color.black)
-                                .cornerRadius(100)
-                        }.offset(x: 15, y: 45)
-                    }.padding(.top, -10)
-                    Button(action : {
-                        let alertHC = UIHostingController(rootView: AlertView(item: item).environment(\.managedObjectContext, viewContext))
-                        alertHC.preferredContentSize = CGSize(width: 500, height: 175)
-                        alertHC.modalPresentationStyle = UIModalPresentationStyle.formSheet
-                        UIApplication.shared.windows[0].rootViewController?.present(alertHC, animated: true)
-                    })
-                    {
-                        Text(item.name!).padding(10).padding(.top, -5).font(.system(size: 20.0)).foregroundColor(Color.black)
+                            Text(item.name!).padding(10).padding(.top, -5).font(.system(size: 20.0)).foregroundColor(Color.black)
+                        }
                     }
                 }
             }
+                .navigationBarTitle("View Media")
+                .navigationBarTitleDisplayMode(.inline)
+                .background(Color.white)
+            Spacer()
         }
-            .navigationBarTitle("View Media")
-            .navigationBarTitleDisplayMode(.inline)
-            .background(Color.white)
-        Spacer()
     }
 }
 
