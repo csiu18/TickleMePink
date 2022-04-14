@@ -53,14 +53,16 @@ struct CreateTrialSettingsModalView: View {
     
     @Binding var screens: [Screen]
     @Binding var isModalPresented: Bool
+    @Binding var insertIndex: Int
     @State private var instructions: String = ""
     @State private var selectedType: Int = 0
     @State private var selectedMediaIndex: Int = -1
     
     
-    init (screens: Binding<[Screen]>, isModalPresented: Binding<Bool>) {
+    init (screens: Binding<[Screen]>, isModalPresented: Binding<Bool>, insertIndex: Binding<Int>) {
         self._screens = screens
         self._isModalPresented = isModalPresented
+        self._insertIndex = insertIndex
     }
     
     var body: some View {
@@ -96,14 +98,9 @@ struct CreateTrialSettingsModalView: View {
             newScreen.media = self.mediaData[self.selectedMediaIndex]
         }
         
-        self.screens.append(newScreen)
+        self.screens.insert(newScreen, at: self.insertIndex)
+        
         self.isModalPresented = false
-    }
-}
-
-struct CreateTrialSettingsModalView_Previews: PreviewProvider {
-    static var previews: some View {
-        CreateTrialSettingsModalView(screens: .constant([]), isModalPresented: .constant(true))
-.previewInterfaceOrientation(.landscapeLeft)
+        
     }
 }
