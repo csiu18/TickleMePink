@@ -17,6 +17,7 @@ private var strokeStamps: [[TimeInterval]] = []
 private var strokeStart: [TimeInterval] = []
 private var currentMediaName: String?
 private var currentMediaType: Int?
+private var currentViewC: ViewController? = nil
 
 struct StartATrialView: View {
     @State private var presentingTrial = false
@@ -180,7 +181,7 @@ struct TrialView: View {
                     })
                     Spacer()
                 }.padding(10)
-                StartATrialView1(mediaName: "",mediaType: -1)
+                StartATrialView1(mediaName: "", mediaType: -1).refreshing()
             } else if currType == 2 || currThing == "Testing2" {
                 // [IMAGE]
                 HStack {
@@ -194,7 +195,7 @@ struct TrialView: View {
                     })
                     Spacer()
                 }.padding(10)
-                StartATrialView1(mediaName: "Image_created_with_a_mobile_phone.png", mediaType: 1)
+                StartATrialView1(mediaName: "Image_created_with_a_mobile_phone.png", mediaType: 1).refreshing()
             } else if currThing == "Testing5" {
                 // [VIDEO]
                 HStack {
@@ -208,7 +209,7 @@ struct TrialView: View {
                     })
                     Spacer()
                 }.padding(10)
-                StartATrialView1(mediaName: "idiotsincars", mediaType: 2)
+                StartATrialView1(mediaName: "idiotsincars", mediaType: 2).refreshing()
             } else {
                 Text("[currType]: Screen Type Error")
                 Button("Close") {
@@ -325,6 +326,7 @@ struct TrialView: View {
             trialStrokes.append(drawing!.strokes)
         }
         cView?.drawing = PKDrawing()
+        
         self.presentingTrial = false
         self.screenIndex += 1
         self.presentingTrial = true
@@ -339,10 +341,30 @@ struct TrialView: View {
 struct StartATrialView1: UIViewControllerRepresentable {
     public var mediaName: String
     public var mediaType: Int
+    @State public var refresh: Bool = false
     func makeUIViewController(context: Context) -> UIViewController {
         currentMediaName = mediaName
         currentMediaType = mediaType
-        return ViewController()
+        if (currentViewC != nil) {
+            currentViewC?.backgroundView()
+            startTime = NSDate()
+        } else {
+            currentViewC = ViewController()
+            currentViewC?.setupPencilKit()
+        }
+        return currentViewC!
+    }
+    func refreshing() -> StartATrialView1 {
+        currentMediaName = mediaName
+        currentMediaType = mediaType
+        if (currentViewC != nil) {
+            currentViewC?.backgroundView()
+            startTime = NSDate()
+        } else {
+            currentViewC = ViewController()
+            currentViewC?.setupPencilKit()
+        }
+        return self
     }
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
     
@@ -374,14 +396,20 @@ class ViewController: UIViewController {
     func setupPencilKit() {
         let canvasView = PKCanvasView(frame: self.view.bounds)
         cView = canvasView
+        print("SHOULD BE FINE")
         canvasView.delegate = self
         canvasView.drawingPolicy = .anyInput  // uncomment to test on anyput, comment for apple pencil
         canvasView.isOpaque = false
         canvasView.becomeFirstResponder()
         //view.addSubview(canvasView)
+        backgroundView()
+    }
+    
+    func backgroundView() {
         if currentMediaType == 1 {
             // [IMAGE]
-            view.addSubview(canvasView)
+            print("NOT FINE")
+            view.addSubview(cView!)
             let imgView = UIImageView(image: UIImage(named: currentMediaName!))
             let subView = cView!.subviews[0]
             subView.addSubview(imgView)
