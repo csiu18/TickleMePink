@@ -9,10 +9,9 @@ import SwiftUI
 import UIKit
 import CoreData
 import Combine
+import AVKit
 
 struct UploadMediaView: View {
-    //var mutArray : NSMutableArray = []
-    
     // show image picker
     @State var showImagePicker: Bool = false
     
@@ -21,9 +20,12 @@ struct UploadMediaView: View {
     
     @State var mediaURL: NSURL?
     
-    @State var mediaPath: String?
+    @State var type: Bool?
     
-    @State var url2: String = ""
+    @State var mediaPath: String?
+    @State private var text: String = ""
+    
+   // @State var url2: String = ""
     
     // get the context
     @Environment(\.managedObjectContext) private var viewContext
@@ -33,42 +35,69 @@ struct UploadMediaView: View {
     
     var body: some View {
         VStack{
+            Text("Upload Media")
+                .font(.system(size: 20.0))
+                .foregroundColor(Color.black)
+                .padding(.top, 30)
+            
+            TextField("Name media (optional)", text: $text)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding().padding(.trailing, 15).padding(.leading, 15)
+            
             // create button to select image
             Button(action: {
                 self.showImagePicker.toggle()
             }, label: {
-                Text("Upload Image")
-            })
+                Text("Choose Media")
+                    .font(.system(size: 20.0))
+                    .foregroundColor(Color.black)
+                    .padding(7).padding(.leading, 12).padding(.trailing, 12)
+                    .background(Color(white: 0.8))
+                    .cornerRadius(8)
+                    
+            }).padding(.bottom, 10)
             
             // show image
             self.selectedImage?.resizable().scaledToFit()
 
-            //var url2: NSURL = mediaURL!
-            //mediaPath = url2.path
-            
             //show button to upload iamge
             Button(action: {
                 let uiImage: UIImage = self.selectedImage.asUIImage()
                 let imageData = uiImage.jpegData(compressionQuality: 1.0)
                 let url2: NSURL = mediaURL!
-                mediaPath = url2.path
-                //let persistenceController = PersistenceController.shared
+                let mediaType: Bool = type!
+                mediaPath = url2.absoluteString
                 
-                //let entityName = NSEntityDescription.entity(forEntityName: "Media", in: viewContext)
                 let imageInstance = Media(context: viewContext)
                 imageInstance.data = imageData
-                imageInstance.name = String(mediaPath![mediaPath!.lastIndex(of: "/")!...].dropFirst(1))
+                imageInstance.name = text != "" ? text : String(mediaPath![mediaPath!.lastIndex(of: "/")!...].dropFirst(1))
+                imageInstance.isImage = mediaType
                 imageInstance.url = mediaPath
                 
                 try? viewContext.save()
-           
+                
+                self.selectedImage = Image("")
+                text = ""
+                
             }, label: {
-                Text("Save Media")
-            })
+                Text("Save")
+                    .fontWeight(.medium)
+                    .padding(7).padding(.leading, 12).padding(.trailing, 12)
+                    .foregroundColor(Color.white)
+                    .background(Color.blue)
+                    .cornerRadius(8)
+                    
+            }).padding(.bottom, 20).padding(.top, 10)
         }
+        .frame(width: 800, height: 600)
+        .background(Color(white: 0.95))
+        .cornerRadius(15)
+        .shadow(color: Color.black.opacity(0.25), radius: 5, x: 2, y: 3)
+    
         .sheet(isPresented: $showImagePicker, content: {
-            ImagePicker(image: self.$selectedImage, url: self.$mediaURL)
+            ImagePicker(image: self.$selectedImage, url: self.$mediaURL, isImage: self.$type)
         })
+        .padding(.top, -50)
     }
 }
 
