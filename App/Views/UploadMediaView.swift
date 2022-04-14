@@ -23,6 +23,7 @@ struct UploadMediaView: View {
     @State var type: Bool?
     
     @State var mediaPath: String?
+    @State private var text: String = ""
     
    // @State var url2: String = ""
     
@@ -34,14 +35,29 @@ struct UploadMediaView: View {
     
     var body: some View {
         VStack{
+            Text("Upload Media")
+                .font(.system(size: 20.0))
+                .foregroundColor(Color.black)
+                .padding(.top, 30)
+            
+            TextField("Name media (optional)", text: $text)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding().padding(.trailing, 15).padding(.leading, 15)
+            // show image
+            
             // create button to select image
             Button(action: {
                 self.showImagePicker.toggle()
             }, label: {
-                Text("Upload Image")
-            })
+                Text("Choose Media")
+                    .font(.system(size: 20.0))
+                    .foregroundColor(Color.black)
+                    .padding(7).padding(.leading, 12).padding(.trailing, 12)
+                    .background(Color(white: 0.8))
+                    .cornerRadius(8)
+                    
+            }).padding(.bottom, 10)
             
-            // show image
             self.selectedImage?.resizable().scaledToFit()
 
             //show button to upload iamge
@@ -54,17 +70,35 @@ struct UploadMediaView: View {
                 
                 let imageInstance = Media(context: viewContext)
                 imageInstance.data = imageData
-                imageInstance.name = "temp"
+                imageInstance.name = text != "" ? text : String(mediaPath![mediaPath!.lastIndex(of: "/")!...].dropFirst(1))
                 imageInstance.isImage = mediaType
                 imageInstance.url = mediaPath
+                
+                try? viewContext.save()
+                
+                self.selectedImage = Image("")
+                text = ""
+                
            
             }, label: {
-                Text("Save Media")
-            })
+                Text("Save")
+                    .fontWeight(.medium)
+                    .padding(7).padding(.leading, 12).padding(.trailing, 12)
+                    .foregroundColor(Color.white)
+                    .background(Color.blue)
+                    .cornerRadius(8)
+                    
+            }).padding(.bottom, 20).padding(.top, 10)
         }
+        .frame(width: 800, height: 600)
+        .background(Color(white: 0.95))
+        .cornerRadius(15)
+    
         .sheet(isPresented: $showImagePicker, content: {
             ImagePicker(image: self.$selectedImage, url: self.$mediaURL, isImage: self.$type)
         })
+        .padding(.top, -50)
+//        Spacer()
     }
 }
 
