@@ -396,7 +396,6 @@ class ViewController: UIViewController {
     func setupPencilKit() {
         let canvasView = PKCanvasView(frame: self.view.bounds)
         cView = canvasView
-        print("SHOULD BE FINE")
         canvasView.delegate = self
         canvasView.drawingPolicy = .anyInput  // uncomment to test on anyput, comment for apple pencil
         canvasView.isOpaque = false
@@ -408,7 +407,6 @@ class ViewController: UIViewController {
     func backgroundView() {
         if currentMediaType == 1 {
             // [IMAGE]
-            print("NOT FINE")
             view.addSubview(cView!)
             let imgView = UIImageView(image: UIImage(named: currentMediaName!))
             let subView = cView!.subviews[0]
