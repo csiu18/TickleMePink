@@ -426,12 +426,12 @@ class ViewController: UIViewController {
             // [IMAGE]
             print("LOOK HERE")
             view.addSubview(cView!)
-            let url:URL = URL(string:currentMediaURL!)!
-            let data = NSData(contentsOf: url)
-            let imgView = UIImageView(image: UIImage(data: data! as Data))
+            //let url:URL = URL(string:currentMediaURL!)!
+            //let data = NSData(contentsOf: url)
+            //let imgView = UIImageView(image: UIImage(data: data! as Data))
             
-            //let nsImage = UIImage(data: currentImage!)!
-            //let imgView = UIImageView(image: nsImage)
+            let nsImage = UIImage(data: currentImage!)!
+            let imgView = UIImageView(image: nsImage)
             let subView = cView!.subviews[0]
             imgView.frame = CGRect(x: 0, y: 0, width: subView.bounds.width  , height:  subView.bounds.height)
             imgView.contentMode = .scaleAspectFit

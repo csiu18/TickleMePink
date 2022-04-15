@@ -70,7 +70,7 @@ struct ImagePicker: UIViewControllerRepresentable {
                 if mediaType  == "public.image" {
                     url = info[UIImagePickerController.InfoKey.imageURL] as? NSURL
                     isImage = true
-                    
+                    /*
                     let imageURL = info[UIImagePickerController.InfoKey.imageURL] as? URL
                     let imageData = NSData(contentsOf: imageURL!)
                     
@@ -97,14 +97,14 @@ struct ImagePicker: UIViewControllerRepresentable {
                     catch
                     {
                       print("An error occured")
-                    }
+                    } */
                 }
 
                 if mediaType == "public.movie" {
                     url = info[UIImagePickerController.InfoKey.mediaURL] as? NSURL
                     isImage = false
                 
-                    let videoURL = info[UIImagePickerController.InfoKey.mediaURL] as? URL
+                   /* let videoURL = info[UIImagePickerController.InfoKey.mediaURL] as? URL
                     let videoData = NSData(contentsOf: videoURL!)
                     
                     //Creates Date-Based URL
@@ -130,7 +130,7 @@ struct ImagePicker: UIViewControllerRepresentable {
                     catch
                     {
                       print("An error occured")
-                    }
+                    } */
                 }
             }
 
