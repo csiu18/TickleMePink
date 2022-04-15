@@ -13,7 +13,6 @@ import PencilKit
 
 struct ExportDataView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @State private var placeholder = ["Placeholder1", "Placeholder2", "Placeholder3", "Placeholder4", "Placeholder5"]
     @State private var showPop = false
     @State private var listItem = "";
     @State private var prevItem: InventoryItem?
@@ -67,10 +66,16 @@ struct popoverView: View {
     @State private var exportName = ""
     @Environment(\.presentationMode) var presentationMode
     var dData: DrawingData
+    var trialStrokes: [[[CGFloat]]]
+    var timeStamps: [[TimeInterval]]
+    var screenNames: [String]
     init(x: String, dData: DrawingData) {
         self.x = x
         self.dData = dData
-        exportName = x
+        self.trialStrokes = dData.strokes as! [[[CGFloat]]]
+        self.timeStamps = dData.pointTimes as! [[TimeInterval]]
+        self.screenNames = dData.screenNames as! [String]
+        self.exportName = x
     }
     var body: some View {
         VStack{
@@ -78,32 +83,55 @@ struct popoverView: View {
                 Text("File Name")
             }.multilineTextAlignment(.center).padding(.top, 30).padding(.bottom, -35)
             List {
-                ForEach(dData.strokes as! [[CGFloat]], id: \.self) { point in
-                    VStack {
-                        Text("\(point[0]), \(point[1]), \(point[2])")
+                Text("Participant Number: \(dData.identifier!)")
+                Text("Participant Condition: \(dData.partCond!)")
+                Text("Date Recorded: \(dData.trialDate!)")
+                Text("-------------------------------------------------------------------")
+                Text("screen,x,y,time(sec)")
+                ForEach(0 ..< trialStrokes.count, id: \.self) { currentIndex in
+                    let currentStroke = trialStrokes[currentIndex]
+                    let currentTimes = timeStamps[currentIndex]
+                    ForEach(0 ..< currentStroke.count, id: \.self) { i in
+                        let point = currentStroke[i]
+                        let currentTime = currentTimes[i]
+                        Text("\(self.screenNames[currentIndex]),\(point[0]),\(point[1]),\(currentTime)" as String)
                     }
+                    Text("-------------------------------------------------------------------")
                 }
             }.padding(15).padding(.top, 0)
-            Button(action: {exportButton(points: dData.strokes as! [[CGFloat]], fileName: exportName, defaultName: dData.identifier!)}) {
+            Button(action: {exportButton(strokeSet: trialStrokes, timeSet: timeStamps, fileName: exportName, defaultName: dData.identifier! + "_" + dData.trialDate!)}) {
                 Label("Export", systemImage: "folder")
             }.padding(.bottom, 20)
         }.background(Color(white: 0.95))
     }
-    func exportButton(points: [[CGFloat]], fileName: String, defaultName: String) {
+    func exportButton(strokeSet: [[[CGFloat]]], timeSet: [[TimeInterval]], fileName: String, defaultName: String) {
         presentationMode.wrappedValue.dismiss()
-        var tester = ""
-        for point in points {
-            tester = tester + "(" + (point[0].description) + ")" + ", "
-        }
-        tester.removeLast()
-        tester.removeLast()
         var name = fileName
         if (name == "") {
             name = defaultName
         }
         let directory = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name + ".txt")
+        /*var fileHandle = FileHandle()
         do {
-            try tester.write(to: directory!, atomically: true, encoding: .utf8)
+            fileHandle = try FileHandle(forUpdating: directory!)
+        } catch {
+            print("[exportButton] error: \(error.localizedDescription)")
+        }*/
+        var writtenString = "Participant Number: \(dData.identifier!)\nParticipant Condition: \(dData.partCond!)\nDate Recorded:\(dData.trialDate!)\n-----------------------------------------------------------\nx,y,time(sec)\n"
+        for i in 0..<strokeSet.count {
+            let currStroke = strokeSet[i]
+            let currTimes = timeSet[i]
+            for j in 0..<currStroke.count {
+                let point = currStroke[j]
+                let time = currTimes[j]
+                writtenString = writtenString + "\(self.screenNames[i])\(point[0]),\(point[1]),\(time)\n"
+                //fileHandle.seekToEndOfFile()
+                //fileHandle.write(writtenString.data(using: .utf8)!)
+            }
+            //writtenString = writtenString + "-----------------------------------------------------------\n"
+        }
+        do {
+            try writtenString.write(to: directory!, atomically: true, encoding: .utf8)
         } catch {
             print("Error in export: \(error.localizedDescription)")
         }
@@ -118,6 +146,7 @@ struct popoverView: View {
             let conScenes = UIApplication.shared.connectedScenes.first
             let windowSc = conScenes as? UIWindowScene
             windowSc?.keyWindow?.rootViewController?.present(actView, animated: true, completion: nil)
+            //fileHandle.closeFile()
         }
     }
 }
