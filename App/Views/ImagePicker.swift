@@ -70,11 +70,67 @@ struct ImagePicker: UIViewControllerRepresentable {
                 if mediaType  == "public.image" {
                     url = info[UIImagePickerController.InfoKey.imageURL] as? NSURL
                     isImage = true
+                    /*
+                    let imageURL = info[UIImagePickerController.InfoKey.imageURL] as? URL
+                    let imageData = NSData(contentsOf: imageURL!)
+                    
+                    //Creates Date-Based URL
+                    let today = Date()
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "HHmmssEdMMMy"
+                    let name = formatter.string(from: today)
+                    let dataPath = name + ".jpeg"
+                    
+                    do
+                    {
+                        //  Find Application Support directory
+                        let fileManager = FileManager.default
+                        let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+                        //  Create subdirectory
+                        let directoryURL = appSupportURL.appendingPathComponent("com.myCompany.myApp")
+                        try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+                        //  Create document
+                        let documentURL = directoryURL.appendingPathComponent (dataPath)
+                        url = documentURL as NSURL
+                        try imageData?.write (to: documentURL)
+                    }
+                    catch
+                    {
+                      print("An error occured")
+                    } */
                 }
 
                 if mediaType == "public.movie" {
                     url = info[UIImagePickerController.InfoKey.mediaURL] as? NSURL
                     isImage = false
+                
+                   /* let videoURL = info[UIImagePickerController.InfoKey.mediaURL] as? URL
+                    let videoData = NSData(contentsOf: videoURL!)
+                    
+                    //Creates Date-Based URL
+                    let today = Date()
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "HHmmssEdMMMy"
+                    let name = formatter.string(from: today)
+                    let dataPath = name + ".mov"
+                    
+                    do
+                    {
+                        //  Find Application Support directory
+                        let fileManager = FileManager.default
+                        let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+                        //  Create subdirectory
+                        let directoryURL = appSupportURL.appendingPathComponent("com.myCompany.myApp")
+                        try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+                        //  Create document
+                        let documentURL = directoryURL.appendingPathComponent (dataPath)
+                        url = documentURL as NSURL
+                        try videoData?.write (to: documentURL)
+                    }
+                    catch
+                    {
+                      print("An error occured")
+                    } */
                 }
             }
 
