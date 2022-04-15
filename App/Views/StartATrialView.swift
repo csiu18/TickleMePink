@@ -19,6 +19,7 @@ private var currentMediaURL: String?
 private var currentMediaBool: Bool?
 private var currentImage: Data?
 private var currentViewC: ViewController? = nil
+private var currentViewStatic: ViewControllerNP? = nil
 private var currentImgView: UIImageView?
 private var currentVidLayer: AVPlayerLayer?
 //private var currentImage:
@@ -175,7 +176,7 @@ struct TrialView: View {
                     Text(screens[screenIndex].instructions!)
                     Spacer()
                 }
-            /*} else if currType == 1 {
+            } else if currType == 1 {
                 // [IMAGE] (but empty)
                 HStack {
                     Spacer().frame(maxWidth: .infinity)
@@ -188,8 +189,8 @@ struct TrialView: View {
                     })
                     Spacer()
                 }.padding(10)
-                StartATrialView1(mediaName: "",mediaType: -1) */
-            } else if currType == 2 || mediaBool == true {
+                StartATrialViewNoPencil(mediaURL: mediaURL!, mediaBool: mediaBool!, mediaImage: mediaImage!).refreshing()
+            } else if currType == 2 /*|| mediaBool == true */{
                 // [IMAGE]
                 HStack {
                     Spacer().frame(maxWidth: .infinity)
@@ -203,7 +204,7 @@ struct TrialView: View {
                     Spacer()
                 }.padding(10)
                 StartATrialView1(mediaURL: mediaURL!, mediaBool: mediaBool!, mediaImage: mediaImage!).refreshing()
-            } else if mediaBool == false {
+            } /*else if mediaBool == false {
                 // [VIDEO]
                 HStack {
                     Spacer().frame(maxWidth: .infinity)
@@ -217,7 +218,7 @@ struct TrialView: View {
                     Spacer()
                 }.padding(10)
                 StartATrialView1(mediaURL: mediaURL!, mediaBool: mediaBool!, mediaImage: mediaImage!).refreshing()
-            } else {
+            }*/ else {
                 Text("[currType]: Screen Type Error")
                 Button("Close") {
                     strokeStamps = []
@@ -462,3 +463,81 @@ extension ViewController: PKCanvasViewDelegate {
     }
 }
 
+struct StartATrialViewNoPencil: UIViewControllerRepresentable {
+    public var mediaURL: String
+    public var mediaBool: Bool
+    public var mediaImage: Data
+    @State public var refresh: Bool = false
+    func makeUIViewController(context: Context) -> UIViewController {
+        currentMediaURL = mediaURL
+        currentMediaBool = mediaBool
+        currentImage = mediaImage
+        if (currentViewStatic == nil) {
+            currentViewStatic = ViewControllerNP()
+        }
+        currentViewStatic!.backgroundView()
+        return currentViewStatic!
+       // return ViewController()
+    }
+    func refreshing() -> StartATrialViewNoPencil {
+        currentMediaURL = mediaURL
+        currentMediaBool = mediaBool
+        currentImage = mediaImage
+        if currentViewStatic == nil {
+            currentViewStatic = ViewControllerNP()
+        }
+        currentViewStatic!.backgroundView()
+        return self
+        
+    }
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+    
+    }
+}
+
+class ViewControllerNP: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        backgroundView()
+    }
+    
+    func backgroundView(){
+        if currentImgView != nil {
+            currentImgView?.removeFromSuperview()
+        }
+        if currentVidLayer != nil {
+            currentVidLayer?.removeFromSuperlayer()
+        }
+        if currentMediaBool! {
+            // [IMAGE]
+            print("LOOK HERE")
+            //let url:URL = URL(string:currentMediaURL!)!
+            //let data = NSData(contentsOf: url)
+            //let imgView = UIImageView(image: UIImage(data: data! as Data))
+            
+            let nsImage = UIImage(data: currentImage!)!
+            let imgView = UIImageView(image: nsImage)
+            imgView.frame = CGRect(x: 0, y: 0, width: view.bounds.width  , height:  view.bounds.height)
+            imgView.contentMode = .scaleAspectFit
+            imgView.clipsToBounds = true
+            currentImgView = imgView
+            view.addSubview(imgView)
+            view.sendSubviewToBack(imgView)
+        } else if !currentMediaBool! {
+            // [VIDEO]
+            print("CURRENTMEDIAURL")
+            print(currentMediaURL)
+            let player = AVPlayer(url: URL(string:currentMediaURL!)!)
+            let vidLayer = AVPlayerLayer(player: player)
+            currentVidLayer = vidLayer
+            //vidLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+            vidLayer.frame = self.view.frame
+            self.view.layer.addSublayer(vidLayer)
+            player.play()
+        }
+    }
+}
