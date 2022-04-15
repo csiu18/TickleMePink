@@ -19,6 +19,7 @@ struct CreateTrialSettingsView: View {
     @State private var partCondition:String = ""
     @State private var screens:[Screen] = []
     @State private var toBeEdited: Int = -1
+    @State private var isSaveAlert: Bool = false
     
     private var gridLayout = [GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
                               GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
@@ -28,9 +29,14 @@ struct CreateTrialSettingsView: View {
         VStack(spacing: 20){
             Text("Create Trial Settings").font(.title)
             VStack(alignment: .leading) {
-                Text("Participant Condition")
+                Text("Participant Condition *")
+                    .foregroundColor(self.isSaveAlert ? Color.red : Color.black)
                 TextField("", text:$partCondition)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color.red, lineWidth: self.isSaveAlert ? 1 : 0)
+                    )
                     .padding(.bottom, 50)
             
                 Text("Trial Sequence")
@@ -108,6 +114,12 @@ struct CreateTrialSettingsView: View {
     }
     
     func saveSequence() {
+        if (self.partCondition == "") {
+            self.isSaveAlert = true
+            return
+        }
+        
+        self.isSaveAlert = false
         let newSettings = TrialSettings(context: self.viewContext)
         newSettings.partCondition = self.partCondition
         
