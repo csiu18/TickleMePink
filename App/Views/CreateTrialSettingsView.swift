@@ -15,9 +15,11 @@ struct CreateTrialSettingsView: View {
    
     @State private var isCreateModalPresented = false
     @State private var isEditModalPresented = false
+    @State private var insertIndex = -1
     @State private var partCondition:String = ""
     @State private var screens:[Screen] = []
     @State private var toBeEdited: Int = -1
+    @State private var isSaveAlert: Bool = false
     
     private var gridLayout = [GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
                               GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
@@ -27,9 +29,14 @@ struct CreateTrialSettingsView: View {
         VStack(spacing: 20){
             Text("Create Trial Settings").font(.title)
             VStack(alignment: .leading) {
-                Text("Participant Condition")
+                Text("Participant Condition *")
+                    .foregroundColor(self.isSaveAlert ? Color.red : Color.black)
                 TextField("", text:$partCondition)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color.red, lineWidth: self.isSaveAlert ? 1 : 0)
+                    )
                     .padding(.bottom, 50)
             
                 Text("Trial Sequence")
@@ -56,10 +63,15 @@ struct CreateTrialSettingsView: View {
                                         .border(Color.black, width: 2)
                                 }
                             }
-                            Image(systemName: "arrow.right")
+                            Button {
+                                addScreen(index: index + 1)
+                            } label: {
+                                Image(systemName: "arrow.right")
+                            }
+                            
                         }
                         Button {
-                            addScreen()
+                            addScreen(index: self.screens.endIndex)
                         } label: {
                             Rectangle()
                                 .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
@@ -77,7 +89,7 @@ struct CreateTrialSettingsView: View {
         }
         .padding(20)
         .modifier(ModalViewModifier(isPresented: $isCreateModalPresented,
-                                    content: {CreateTrialSettingsModalView(screens: $screens, isModalPresented: $isCreateModalPresented)},
+                                    content: {CreateTrialSettingsModalView(screens: $screens, isModalPresented: $isCreateModalPresented, insertIndex: $insertIndex)},
                                     title: "Add Sequence Event"))
         .modifier(ModalViewModifier(isPresented: $isEditModalPresented,
                                     content: {EditTrialSettingsModalView(screens: $screens, screenIndex: $toBeEdited, isModalPresented: $isEditModalPresented)},
@@ -96,11 +108,18 @@ struct CreateTrialSettingsView: View {
         self.isEditModalPresented = true
     }
     
-    func addScreen() {
+    func addScreen(index: Int) {
+        self.insertIndex = index
         self.isCreateModalPresented = true
     }
     
     func saveSequence() {
+        if (self.partCondition == "") {
+            self.isSaveAlert = true
+            return
+        }
+        
+        self.isSaveAlert = false
         let newSettings = TrialSettings(context: self.viewContext)
         newSettings.partCondition = self.partCondition
         
