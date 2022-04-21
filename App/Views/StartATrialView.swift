@@ -73,22 +73,17 @@ struct StartATrialView: View {
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
                         ForEach(self.screens.indices, id: \.self) { index in
-                            switch self.screens[index].type{
-                                case 0:
-                                    label: do {
-                                        Rectangle()
-                                            .stroke(Color.black, lineWidth: 2)
-                                            .foregroundColor(Color.white)
-                                            .frame(width: 250, height: 185)
-                                            .overlay(Text("Instructions").foregroundColor(.black))
-                                    }
-                                default:
-                                    Rectangle()
-                                        .stroke(Color.black, lineWidth: 2)
-                                        .foregroundColor(Color.white)
-                                        .frame(width: 250, height: 185)
-                                        .overlay(Text("No Type").foregroundColor(.white))
-                            
+                            if self.screens[index].type == 0 {
+                                Rectangle()
+                                    .stroke(Color.black, lineWidth: 2)
+                                    .foregroundColor(Color.white)
+                                    .frame(width: 250, height: 185)
+                                    .overlay(Text("Instructions").foregroundColor(.black))
+                            } else {
+                                Image(uiImage: UIImage(data: self.screens[index].media!.data!)!)
+                                    .resizable()
+                                    .frame(width: 250, height: 185)
+                                    .border(Color.black, width: 2)
                             }
                             Spacer()
                         }
