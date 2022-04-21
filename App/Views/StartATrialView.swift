@@ -330,13 +330,19 @@ struct TrialView: View {
         }
         cView?.drawing = PKDrawing()
         self.presentingTrial = false
-        self.screenIndex += 1
-        self.presentingTrial = true
         if !strokeStart.isEmpty {
             strokeStamps.append(strokeStart)
             strokeStart = []
-            screenNames.append("Screen\(self.screenIndex)")
+            //screenNames.append("Screen\(self.screenIndex)")
+            let currMedia = self.screens[screenIndex - 1].media!
+            let name:String = currMedia.name!
+            let start = name.startIndex
+            let end = name.index(before: name.lastIndex(of: ".") ?? name.endIndex)
+            let printedName = String(name[start...end])
+            screenNames.append("\(printedName)")
         }
+        self.screenIndex += 1
+        self.presentingTrial = true
     }
 }
 
@@ -377,7 +383,7 @@ struct StartATrialView1: UIViewControllerRepresentable {
     
     }
 }
-
+/*
 struct VideoView: View {
     let player = AVPlayer(url: Bundle.main.url(forResource: "idiotsincars", withExtension: "mp4")!)
     init() {
@@ -386,7 +392,7 @@ struct VideoView: View {
     var body: some View {
         VideoPlayer(player: player)
     }
-}
+}*/
 
 class ViewController: UIViewController {
     @Environment(\.managedObjectContext) var viewContext
