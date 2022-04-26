@@ -22,6 +22,7 @@ struct EditTrialSettingsView: View {
     @State private var insertIndex = -1
     @State private var screens: [Screen] = []
     @State private var toBeEdited: Int = -1
+    @State private var confirmationShow: Bool = false
 
     private var gridLayout = [GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
                               GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
@@ -99,7 +100,13 @@ struct EditTrialSettingsView: View {
             }
             Spacer()
             if self.partCondIndex != -1 {
-                Button("Save Sequence", action: saveSequence)
+                HStack {
+                    Button("Save Sequence", action: saveSequence)
+                    Button("Delete Sequence", role: .destructive, action: {self.confirmationShow = true})
+                        .confirmationDialog("Are you sure?", isPresented: $confirmationShow, titleVisibility: .visible) {
+                            Button("Yes", role: .destructive, action: deleteSequence)
+                        }
+                }
             }
         }
         .padding(20)
@@ -116,6 +123,22 @@ struct EditTrialSettingsView: View {
         } label: {
             Text("Cancel")
         })
+    }
+    
+    func deleteSequence() {
+        if (self.partCondIndex != -1) {
+            let currSequence = self.trialSettings[self.partCondIndex]
+            self.viewContext.delete(currSequence)
+        }
+        
+        do {
+            try self.viewContext.save()
+        } catch {
+            print("Error in deleting sequence: \(error.localizedDescription)")
+        }
+
+        self.presentationMode.wrappedValue.dismiss()
+        
     }
     
     func editScreen(toBeEdited: Int) {
