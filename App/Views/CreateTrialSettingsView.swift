@@ -42,6 +42,21 @@ struct CreateTrialSettingsView: View {
                 Text("Trial Sequence")
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
+                        if (self.screens.count > 0) {
+                            Button {
+                                addScreen(index: 0)
+                            } label: {
+                                Rectangle()
+                                    .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
+                                    .frame(width: 250, height: 185)
+                                    .overlay(Text("Add More").foregroundColor(.black))
+                            }
+                            Button {
+                                addScreen(index: 0)
+                            } label: {
+                                Image(systemName: "arrow.right")
+                            }
+                        }
                         ForEach(self.screens.indices, id: \.self){ index in
                             if self.screens[index].type == 0 {
                                 Button {

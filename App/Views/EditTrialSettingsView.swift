@@ -33,20 +33,28 @@ struct EditTrialSettingsView: View {
             Text("Edit Trial Settings").font(.title)
             VStack(alignment: .leading) {
                 Text("Participant Condition")
-                Picker("", selection: $partCondIndex) {
-                    Text("Select Participant Condition...").tag(-1)
-                    
-                    ForEach(self.trialSettings.indices, id:\.self) { index in
-                        Text(self.trialSettings[index].partCondition ?? "").tag(index)
-                    }.onChange(of: self.partCondIndex) { newTrialSetting in
-                        if partCondIndex != -1 {
-                            self.screens = self.trialSettings[self.partCondIndex].screenToTrialSettings?.array as! [Screen]
-                        } else {
-                            self.screens = []
+                HStack {
+                    Picker("", selection: $partCondIndex) {
+                        Text("Select Participant Condition...").tag(-1)
+                        
+                        ForEach(self.trialSettings.indices, id:\.self) { index in
+                            Text(self.trialSettings[index].partCondition ?? "").tag(index)
+                        }.onChange(of: self.partCondIndex) { newTrialSetting in
+                            if partCondIndex != -1 {
+                                self.screens = self.trialSettings[self.partCondIndex].screenToTrialSettings?.array as! [Screen]
+                            } else {
+                                self.screens = []
+                            }
                         }
                     }
+                    if (self.partCondIndex != -1) {
+                        Spacer()
+                        Button("Delete Sequence", role: .destructive, action: {self.confirmationShow = true})
+                            .confirmationDialog("Are you sure?", isPresented: $confirmationShow, titleVisibility: .visible) {
+                                Button("Yes", role: .destructive, action: deleteSequence)
+                            }
+                    }
                 }.padding(.bottom, self.partCondIndex == -1 ? 50 : 10)
-                
                 if (self.partCondIndex != -1) {
                     Text("New Participant Condition")
                     TextField("", text:$partCondition)
@@ -100,13 +108,7 @@ struct EditTrialSettingsView: View {
             }
             Spacer()
             if self.partCondIndex != -1 {
-                HStack {
-                    Button("Save Sequence", action: saveSequence)
-                    Button("Delete Sequence", role: .destructive, action: {self.confirmationShow = true})
-                        .confirmationDialog("Are you sure?", isPresented: $confirmationShow, titleVisibility: .visible) {
-                            Button("Yes", role: .destructive, action: deleteSequence)
-                        }
-                }
+                Button("Save Sequence", action: saveSequence)
             }
         }
         .padding(20)
