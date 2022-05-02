@@ -22,6 +22,7 @@ private var currentViewC: ViewController? = nil
 private var currentViewStatic: ViewControllerNP? = nil
 private var currentImgView: UIImageView?
 private var currentVidLayer: AVPlayerLayer?
+private var isLast: Bool = false
 //private var currentImage:
 
 struct StartATrialView: View {
@@ -73,22 +74,17 @@ struct StartATrialView: View {
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
                         ForEach(self.screens.indices, id: \.self) { index in
-                            switch self.screens[index].type{
-                                case 0:
-                                    label: do {
-                                        Rectangle()
-                                            .stroke(Color.black, lineWidth: 2)
-                                            .foregroundColor(Color.white)
-                                            .frame(width: 250, height: 185)
-                                            .overlay(Text("Instructions").foregroundColor(.black))
-                                    }
-                                default:
-                                    Rectangle()
-                                        .stroke(Color.black, lineWidth: 2)
-                                        .foregroundColor(Color.white)
-                                        .frame(width: 250, height: 185)
-                                        .overlay(Text("No Type").foregroundColor(.white))
-                            
+                            if self.screens[index].type == 0 {
+                                Rectangle()
+                                    .stroke(Color.black, lineWidth: 2)
+                                    .foregroundColor(Color.white)
+                                    .frame(width: 250, height: 185)
+                                    .overlay(Text("Instructions").foregroundColor(.black))
+                            } else {
+                                Image(uiImage: UIImage(data: self.screens[index].media!.data!)!)
+                                    .resizable()
+                                    .frame(width: 250, height: 185)
+                                    .border(Color.black, width: 2)
                             }
                             Spacer()
                         }
@@ -226,7 +222,7 @@ struct TrialView: View {
                     self.presentingTrial = false
                 }
             }
-        } else {
+        } else if isLast {
             // save screen
             Spacer()
             Text("Confirm Trial Details and Data")
@@ -267,6 +263,7 @@ struct TrialView: View {
                             saving()
                             strokeStamps = []
                             self.presentingTrial = false
+                            isLast = false
                         }, label: {
                             Text("Save Data")
                                 .padding(10)
@@ -278,12 +275,29 @@ struct TrialView: View {
                             strokeStart = []
                             strokeStamps = []
                             self.presentingTrial = false
+                            isLast = false
                         }
                     }
                     Spacer()
                 }
             }
             .padding(40).padding(.top, 0)
+        } else {
+            HStack {
+                Spacer().frame(maxWidth: .infinity)
+                Button(action: {incrAndRefresh(); isLast = true}, label: {
+                    Text("Next")
+                        .padding(8)
+                        .foregroundColor(Color.white)
+                        .background(Color.red)
+                        .cornerRadius(8)
+                })
+                Spacer()
+            }.padding(10)
+            Spacer()
+            Text("Trial Concluded. Please return the device to the researcher.")
+            Spacer()
+            
         }
     }
     
@@ -335,13 +349,19 @@ struct TrialView: View {
         }
         cView?.drawing = PKDrawing()
         self.presentingTrial = false
-        self.screenIndex += 1
-        self.presentingTrial = true
         if !strokeStart.isEmpty {
             strokeStamps.append(strokeStart)
             strokeStart = []
-            screenNames.append("Screen\(self.screenIndex)")
+            //screenNames.append("Screen\(self.screenIndex)")
+            let currMedia = self.screens[screenIndex - 1].media!
+            let name:String = currMedia.name!
+            let start = name.startIndex
+            let end = name.index(before: name.lastIndex(of: ".") ?? name.endIndex)
+            let printedName = String(name[start...end])
+            screenNames.append("\(printedName)")
         }
+        self.screenIndex += 1
+        self.presentingTrial = true
     }
 }
 
@@ -382,7 +402,7 @@ struct StartATrialView1: UIViewControllerRepresentable {
     
     }
 }
-
+/*
 struct VideoView: View {
     let player = AVPlayer(url: Bundle.main.url(forResource: "idiotsincars", withExtension: "mp4")!)
     init() {
@@ -391,7 +411,7 @@ struct VideoView: View {
     var body: some View {
         VideoPlayer(player: player)
     }
-}
+}*/
 
 class ViewController: UIViewController {
     @Environment(\.managedObjectContext) var viewContext
@@ -408,6 +428,7 @@ class ViewController: UIViewController {
     func setupPencilKit() {
         let canvasView = PKCanvasView(frame: self.view.bounds)
         cView = canvasView
+        canvasView.tool = PKInkingTool(.pen, color: UIColor(Color(red: 0.9882, green: 0.502, blue: 0.6471)), width:5)
         canvasView.delegate = self
         canvasView.drawingPolicy = .anyInput  // uncomment to test on anyput, comment for apple pencil
         canvasView.isOpaque = false
