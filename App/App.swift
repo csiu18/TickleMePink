@@ -15,6 +15,7 @@ struct AppApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environment(\.colorScheme, .light)
         }
     }
 }
