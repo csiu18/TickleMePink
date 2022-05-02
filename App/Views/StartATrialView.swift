@@ -158,6 +158,18 @@ struct TrialView: View {
                 // [INSTRUCTIONS]
                 VStack {
                     HStack {
+                        Button(action: {
+                            strokeStart = []
+                            strokeStamps = []
+                            self.presentingTrial = false
+                            isLast = false
+                        }, label: {
+                            Text("End Trial")
+                                .padding(8)
+                                .foregroundColor(Color.white)
+                                .background(Color.gray)
+                                .cornerRadius(8)
+                        })
                         Spacer().frame(maxWidth: .infinity)
                         Button(action: incrAndRefresh, label: {
                             Text("Next")
@@ -175,6 +187,18 @@ struct TrialView: View {
             } else if currType == 1 {
                 // [IMAGE] (but empty)
                 HStack {
+                    Button(action: {
+                        strokeStart = []
+                        strokeStamps = []
+                        self.presentingTrial = false
+                        isLast = false
+                    }, label: {
+                        Text("End Trial")
+                            .padding(8)
+                            .foregroundColor(Color.white)
+                            .background(Color.gray)
+                            .cornerRadius(8)
+                    })
                     Spacer().frame(maxWidth: .infinity)
                     Button(action: incrAndRefresh, label: {
                         Text("Next")
@@ -189,6 +213,18 @@ struct TrialView: View {
             } else if currType == 2 /*|| mediaBool == true */{
                 // [IMAGE]
                 HStack {
+                    Button(action: {
+                        strokeStart = []
+                        strokeStamps = []
+                        self.presentingTrial = false
+                        isLast = false
+                    }, label: {
+                        Text("End Trial")
+                            .padding(8)
+                            .foregroundColor(Color.white)
+                            .background(Color.gray)
+                            .cornerRadius(8)
+                    })
                     Spacer().frame(maxWidth: .infinity)
                     Button(action: incrAndRefresh, label: {
                         Text("Next")
