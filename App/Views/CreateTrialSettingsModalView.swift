@@ -54,6 +54,7 @@ struct CreateTrialSettingsModalView: View {
     @Binding var screens: [Screen]
     @Binding var isModalPresented: Bool
     @Binding var insertIndex: Int
+    @State private var isSaveAlert: Bool = false
     @State private var instructions: String = ""
     @State private var selectedType: Int = 0
     @State private var selectedMediaIndex: Int = -1
@@ -78,8 +79,14 @@ struct CreateTrialSettingsModalView: View {
             
             if self.selectedType == 0 {
                 TextEditor(text: $instructions)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color.red, lineWidth: self.isSaveAlert ? 1 : 0))
             } else {
-                    MediaPreviewView(selectedMediaIndex: $selectedMediaIndex, mediaData: mediaData)
+                MediaPreviewView(selectedMediaIndex: $selectedMediaIndex, mediaData: mediaData)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color.red, lineWidth: self.isSaveAlert ? 1 : 0))
             }
             
             Spacer()
@@ -88,12 +95,17 @@ struct CreateTrialSettingsModalView: View {
     }
     
     func saveScreen() {
+        if ((self.selectedType == 0 && self.instructions == "") ||
+            (self.selectedType != 0 && self.selectedMediaIndex == -1)) {
+            self.isSaveAlert = true
+            return
+        }
+        
         let newScreen = Screen(context: self.viewContext)
         newScreen.type = Int64(self.selectedType)
         
         if self.selectedType == 0 {
             newScreen.instructions = self.instructions
-            
         } else {
             newScreen.media = self.mediaData[self.selectedMediaIndex]
         }
