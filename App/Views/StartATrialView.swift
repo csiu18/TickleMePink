@@ -353,7 +353,7 @@ struct TrialView: View {
             strokeStamps.append(strokeStart)
             strokeStart = []
             //screenNames.append("Screen\(self.screenIndex)")
-            let currMedia = self.screens[screenIndex - 1].media!
+            let currMedia = self.screens[screenIndex].media!
             let name:String = currMedia.name!
             let start = name.startIndex
             let end = name.index(before: name.lastIndex(of: ".") ?? name.endIndex)
