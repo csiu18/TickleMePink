@@ -19,7 +19,8 @@ struct CreateTrialSettingsView: View {
     @State private var partCondition:String = ""
     @State private var screens:[Screen] = []
     @State private var toBeEdited: Int = -1
-    @State private var isSaveAlert: Bool = false
+    @State private var isPartCondSaveAlert: Bool = false
+    @State private var isScreensSaveAlert: Bool = false
     
     private var gridLayout = [GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
                               GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
@@ -30,12 +31,12 @@ struct CreateTrialSettingsView: View {
             Text("Create Trial Settings").font(.title)
             VStack(alignment: .leading) {
                 Text("Participant Condition *")
-                    .foregroundColor(self.isSaveAlert ? Color.red : Color.black)
+                    .foregroundColor(self.isPartCondSaveAlert ? Color.red : Color.black)
                 TextField("", text:$partCondition)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
-                            .stroke(Color.red, lineWidth: self.isSaveAlert ? 1 : 0)
+                            .stroke(Color.red, lineWidth: self.isPartCondSaveAlert ? 1 : 0)
                     )
                     .padding(.bottom, 50)
             
@@ -106,6 +107,10 @@ struct CreateTrialSettingsView: View {
                         }
                     }
                 }
+                .overlay(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(Color.red, lineWidth: self.isScreensSaveAlert ? 1 : 0)
+                )
             }
 
             Spacer()
@@ -147,11 +152,18 @@ struct CreateTrialSettingsView: View {
     
     func saveSequence() {
         if (self.partCondition == "") {
-            self.isSaveAlert = true
+            self.isPartCondSaveAlert = true
+        }
+        if (self.screens.count == 0) {
+            self.isScreensSaveAlert = true
+        }
+        
+        if (self.isScreensSaveAlert || self.isPartCondSaveAlert) {
             return
         }
         
-        self.isSaveAlert = false
+        self.isPartCondSaveAlert = false
+        self.isScreensSaveAlert = false
         let newSettings = TrialSettings(context: self.viewContext)
         newSettings.partCondition = self.partCondition
         

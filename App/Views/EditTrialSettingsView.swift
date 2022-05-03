@@ -23,6 +23,7 @@ struct EditTrialSettingsView: View {
     @State private var screens: [Screen] = []
     @State private var toBeEdited: Int = -1
     @State private var confirmationShow: Bool = false
+    @State private var isScreensSaveAlert: Bool = false
 
     private var gridLayout = [GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
                               GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
@@ -129,7 +130,10 @@ struct EditTrialSettingsView: View {
                             }
                         }
                     }
-                }
+                }.overlay(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(Color.red, lineWidth: self.isScreensSaveAlert ? 1 : 0)
+                )
             }
             Spacer()
             if self.partCondIndex != -1 {
@@ -180,6 +184,13 @@ struct EditTrialSettingsView: View {
     
     func saveSequence() {
         if (self.partCondIndex != -1) {
+            if (self.screens.count == 0) {
+                self.isScreensSaveAlert = true
+                return
+            }
+            
+            self.isScreensSaveAlert = false
+            
             let currSettings = trialSettings[self.partCondIndex]
             
             let orderedSet = NSOrderedSet(array: self.screens)
