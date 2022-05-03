@@ -111,6 +111,7 @@ struct CreateTrialSettingsView: View {
             Spacer()
             Button("Save Sequence", action: saveSequence)
         }
+        .onAppear(perform: loadDefaultScreen)
         .padding(20)
         .modifier(ModalViewModifier(isPresented: $isCreateModalPresented,
                                     content: {CreateTrialSettingsModalView(screens: $screens, isModalPresented: $isCreateModalPresented, insertIndex: $insertIndex)},
@@ -125,6 +126,13 @@ struct CreateTrialSettingsView: View {
         } label: {
             Text("Cancel")
         })
+    }
+    
+    func loadDefaultScreen() {
+        let handBackScreen = Screen(context: self.viewContext)
+        handBackScreen.instructions = "Trial is complete. Please hand iPad back."
+        handBackScreen.type = Int64(0)
+        self.screens.append(handBackScreen)
     }
     
     func editScreen(toBeEdited: Int) {
