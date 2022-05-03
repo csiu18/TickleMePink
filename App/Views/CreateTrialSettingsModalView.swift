@@ -58,6 +58,7 @@ struct CreateTrialSettingsModalView: View {
     @State private var instructions: String = ""
     @State private var selectedType: Int = 0
     @State private var selectedMediaIndex: Int = -1
+    @FocusState private var isTextFieldFocused: Bool
     
     
     init (screens: Binding<[Screen]>, isModalPresented: Binding<Bool>, insertIndex: Binding<Int>) {
@@ -68,17 +69,20 @@ struct CreateTrialSettingsModalView: View {
     
     var body: some View {
         VStack {
-            VStack(alignment: .leading) {
-                Text("Type of Screen:")
-                Picker("", selection: $selectedType) {
-                    Text("Instructions").tag(0)
-                    Text("Static").tag(1)
-                    Text("Interactive").tag(2)
-                }.padding(.bottom, 20)
-            }.frame(maxWidth: .infinity, alignment: .leading)
+            if (!isTextFieldFocused) {
+                VStack(alignment: .leading) {
+                    Text("Type of Screen:")
+                    Picker("", selection: $selectedType) {
+                        Text("Instructions").tag(0)
+                        Text("Static").tag(1)
+                        Text("Interactive").tag(2)
+                    }.padding(.bottom, 20)
+                }.frame(maxWidth: .infinity, alignment: .leading)
+            }
             
             if self.selectedType == 0 {
                 TextEditor(text: $instructions)
+                    .focused($isTextFieldFocused)
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(Color.red, lineWidth: self.isSaveAlert ? 1 : 0))
