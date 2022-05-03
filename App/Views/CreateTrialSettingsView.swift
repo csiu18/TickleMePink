@@ -43,13 +43,16 @@ struct CreateTrialSettingsView: View {
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
                         if (self.screens.count > 0) {
-                            Button {
-                                addScreen(index: 0)
-                            } label: {
-                                Rectangle()
-                                    .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
-                                    .frame(width: 250, height: 185)
-                                    .overlay(Text("Add More").foregroundColor(.black))
+                            VStack{
+                                Button {
+                                    addScreen(index: 0)
+                                } label: {
+                                    Rectangle()
+                                        .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
+                                        .frame(width: 250, height: 185)
+                                        .overlay(Text("Add More").foregroundColor(.black))
+                                }
+                                Text(" ")
                             }
                             Button {
                                 addScreen(index: 0)
@@ -58,25 +61,29 @@ struct CreateTrialSettingsView: View {
                             }
                         }
                         ForEach(self.screens.indices, id: \.self){ index in
-                            if self.screens[index].type == 0 {
-                                Button {
-                                    editScreen(toBeEdited: index)
-                                } label: {
-                                    Rectangle()
-                                        .stroke(Color.black, lineWidth: 2)
-                                        .foregroundColor(Color.white)
-                                        .frame(width: 250, height: 185)
-                                        .overlay(Text("Instructions").foregroundColor(.black))
+                            VStack{
+                                if self.screens[index].type == 0 {
+                                    Button {
+                                        editScreen(toBeEdited: index)
+                                    } label: {
+                                        Rectangle()
+                                            .stroke(Color.black, lineWidth: 2)
+                                            .foregroundColor(Color.white)
+                                            .frame(width: 250, height: 185)
+                                            .overlay(Text("Instructions").foregroundColor(.black))
+                                    }
+                                } else {
+                                    Button {
+                                        editScreen(toBeEdited: index)
+                                    } label: {
+                                        Image(uiImage: UIImage(data: self.screens[index].media!.data!)!)
+                                            .resizable()
+                                            .frame(width: 250, height: 185)
+                                            .border(Color.black, width: 2)
+                                    }
                                 }
-                            } else {
-                                Button {
-                                    editScreen(toBeEdited: index)
-                                } label: {
-                                    Image(uiImage: UIImage(data: self.screens[index].media!.data!)!)
-                                        .resizable()
-                                        .frame(width: 250, height: 185)
-                                        .border(Color.black, width: 2)
-                                }
+                                Text(self.screens[index].type == 0 ? " " : self.screens[index].media!.name!)
+                                    .lineLimit(1)
                             }
                             Button {
                                 addScreen(index: index + 1)
@@ -85,18 +92,20 @@ struct CreateTrialSettingsView: View {
                             }
                             
                         }
-                        Button {
-                            addScreen(index: self.screens.endIndex)
-                        } label: {
-                            Rectangle()
-                                .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
-                                .frame(width: 250, height: 185)
-                                .overlay(Text("Add More").foregroundColor(.black))
-                                                            
+                        VStack {
+                            Button {
+                                addScreen(index: self.screens.endIndex)
+                            } label: {
+                                Rectangle()
+                                    .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
+                                    .frame(width: 250, height: 185)
+                                    .overlay(Text("Add More").foregroundColor(.black))
+                                                                
+                            }
+                            Text(" ")
                         }
                     }
                 }
-            
             }
 
             Spacer()
