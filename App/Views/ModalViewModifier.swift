@@ -6,15 +6,16 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ModalViewModifier<T: View>: ViewModifier {
     let modal: T
     @Binding var isPresented: Bool
-    private var title: String
+    @State private var title: String
     
     init(isPresented: Binding<Bool>, @ViewBuilder content: () -> T, title: String = "") {
         self._isPresented = isPresented
-        self.title = title
+        self._title = State(initialValue: title)
         modal = content()
     }
     

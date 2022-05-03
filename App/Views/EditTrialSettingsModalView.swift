@@ -16,6 +16,7 @@ struct EditTrialSettingsModalView: View {
     @Binding var screens: [Screen]
     @Binding var screenIndex: Int
     @Binding var isModalPresented: Bool
+    @State private var isSaveAlert: Bool = false
     @State private var screen: Screen?
     @State private var instructions: String?
     @State private var screenType: Int64?
@@ -38,8 +39,15 @@ struct EditTrialSettingsModalView: View {
         VStack {
             if self.screenType == 0 {
                 TextEditor(text: Binding($instructions)!)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color.red, lineWidth: self.isSaveAlert ? 1 : 0))
+
             } else {
                 MediaPreviewView(selectedMediaIndex: $selectedMediaIndex, mediaData: mediaData)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color.red, lineWidth: self.isSaveAlert ? 1 : 0))
             }
             
             Spacer()
@@ -47,7 +55,16 @@ struct EditTrialSettingsModalView: View {
                 Button("Done", action: saveScreen).padding(.top, 20)
                 Button("Remove", role: .destructive, action: deleteScreen).padding(.top, 20)
             }
+        }.onAppear(perform: loadMediaIndex)
+    }
+    
+    func loadMediaIndex() {
+        if (self.screenType != 0) {
+//            let mediaIndex = self.mediaData.firstIndex(where: {$0.name == self.screens[self.screenIndex].media!.name ?? ""}) ?? -1
+            let mediaIndex = self.mediaData.firstIndex(of: self.screens[self.screenIndex].media!) ?? -1
+            self.selectedMediaIndex = mediaIndex
         }
+        
     }
     
     func deleteScreen() {
@@ -60,6 +77,12 @@ struct EditTrialSettingsModalView: View {
     }
     
     func saveScreen() {
+        if ((self.screenType == 0 && self.instructions == "") ||
+            (self.screenType != 0 && self.selectedMediaIndex == -1)) {
+            self.isSaveAlert = true
+            return
+        }
+        
         if (self.screen != nil && self.screenType == 0) {
             self.screen!.instructions = self.instructions!
         } else if (self.screen != nil && self.screen!.media != nil && self.selectedMediaIndex != -1) {
