@@ -116,7 +116,7 @@ struct CreateTrialSettingsView: View {
             Spacer()
             Button("Save Sequence", action: saveSequence)
         }
-        .onAppear(perform: loadDefaultScreen)
+        //.onAppear(perform: loadDefaultScreen)
         .padding(20)
         .modifier(ModalViewModifier(isPresented: $isCreateModalPresented,
                                     content: {CreateTrialSettingsModalView(screens: $screens, isModalPresented: $isCreateModalPresented, insertIndex: $insertIndex)},
