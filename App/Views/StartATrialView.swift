@@ -22,6 +22,7 @@ private var currentViewC: ViewController? = nil
 private var currentViewStatic: ViewControllerNP? = nil
 private var currentImgView: UIImageView?
 private var currentVidLayer: AVPlayerLayer?
+private var isLast: Bool = false
 //private var currentImage:
 
 struct StartATrialView: View {
@@ -221,7 +222,7 @@ struct TrialView: View {
                     self.presentingTrial = false
                 }
             }
-        } else {
+        } else if isLast {
             // save screen
             Spacer()
             Text("Confirm Trial Details and Data")
@@ -262,6 +263,7 @@ struct TrialView: View {
                             saving()
                             strokeStamps = []
                             self.presentingTrial = false
+                            isLast = false
                         }, label: {
                             Text("Save Data")
                                 .padding(10)
@@ -273,12 +275,29 @@ struct TrialView: View {
                             strokeStart = []
                             strokeStamps = []
                             self.presentingTrial = false
+                            isLast = false
                         }
                     }
                     Spacer()
                 }
             }
             .padding(40).padding(.top, 0)
+        } else {
+            HStack {
+                Spacer().frame(maxWidth: .infinity)
+                Button(action: {incrAndRefresh(); isLast = true}, label: {
+                    Text("Next")
+                        .padding(8)
+                        .foregroundColor(Color.white)
+                        .background(Color.red)
+                        .cornerRadius(8)
+                })
+                Spacer()
+            }.padding(10)
+            Spacer()
+            Text("Trial Concluded. Please return the device to the researcher.")
+            Spacer()
+            
         }
     }
     
@@ -409,6 +428,7 @@ class ViewController: UIViewController {
     func setupPencilKit() {
         let canvasView = PKCanvasView(frame: self.view.bounds)
         cView = canvasView
+        canvasView.tool = PKInkingTool(.pen, color: UIColor(Color(red: 0.9882, green: 0.502, blue: 0.6471)), width:5)
         canvasView.delegate = self
         canvasView.drawingPolicy = .anyInput  // uncomment to test on anyput, comment for apple pencil
         canvasView.isOpaque = false
