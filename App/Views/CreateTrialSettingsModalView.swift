@@ -20,21 +20,27 @@ struct MediaPreviewView: View {
     private var gridItems = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
     var body: some View {
-        LazyVGrid(columns: gridItems, spacing: 10) {
-            ForEach(mediaData.indices, id: \.self) { i in
-                ZStack{
+        ScrollView() {
+            LazyVGrid(columns: gridItems, spacing: 10) {
+                ForEach(mediaData.indices, id: \.self) { i in
                     Button {
                         selectMedia(id: i)
                     } label: {
-                        Image(uiImage: UIImage(data: mediaData[i].data!)!)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 150)
-                            .cornerRadius(10)
-                            .border(Color.black, width: self.selectedMediaIndex == i ? 4 : 0)
-                            .cornerRadius(10)
-                            .padding(.top, 10)
-                            .padding(.bottom, 5)
+                        ZStack{
+                            if (!mediaData[i].isImage) {
+                                Image(systemName: "video.fill").zIndex(1)
+                                    .foregroundColor(Color.white)
+                            }
+                            Image(uiImage: UIImage(data: mediaData[i].data!)!)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 150)
+                                .cornerRadius(10)
+                                .border(Color.black, width: self.selectedMediaIndex == i ? 4 : 0)
+                                .cornerRadius(10)
+                                .padding(.top, 10)
+                                .padding(.bottom, 5)
+                        }
                     }
                 }
             }
