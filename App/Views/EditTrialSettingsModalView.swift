@@ -55,7 +55,16 @@ struct EditTrialSettingsModalView: View {
                 Button("Done", action: saveScreen).padding(.top, 20)
                 Button("Remove", role: .destructive, action: deleteScreen).padding(.top, 20)
             }
+        }.onAppear(perform: loadMediaIndex)
+    }
+    
+    func loadMediaIndex() {
+        if (self.screenType != 0) {
+//            let mediaIndex = self.mediaData.firstIndex(where: {$0.name == self.screens[self.screenIndex].media!.name ?? ""}) ?? -1
+            let mediaIndex = self.mediaData.firstIndex(of: self.screens[self.screenIndex].media!) ?? -1
+            self.selectedMediaIndex = mediaIndex
         }
+        
     }
     
     func deleteScreen() {
