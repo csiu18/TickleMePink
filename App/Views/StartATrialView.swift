@@ -23,6 +23,7 @@ private var currentViewStatic: ViewControllerNP? = nil
 private var currentImgView: UIImageView?
 private var currentVidLayer: AVPlayerLayer?
 private var isLast: Bool = false
+private var text: String = ""
 //private var currentImage:
 
 struct StartATrialView: View {
@@ -508,16 +509,24 @@ class ViewController: UIViewController {
         if currentVidLayer != nil {
             currentVidLayer?.removeFromSuperlayer()
         }
+        let tempURL:URL = URL(string:currentMediaURL!)!
+        let mediaPath = tempURL.absoluteString
+        let dataPath = text != "" ? text : String(mediaPath[mediaPath.lastIndex(of: "/")!...].dropFirst(1))
+        //  Find Application Support directory
+        let fileManager = FileManager.default
+        let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        //  Create document
+        let documentURL = appSupportURL.appendingPathComponent (dataPath)
         if currentMediaBool! {
             // [IMAGE]
             print("LOOK HERE")
             view.addSubview(cView!)
             //let url:URL = URL(string:currentMediaURL!)!
-            //let data = NSData(contentsOf: url)
-            //let imgView = UIImageView(image: UIImage(data: data! as Data))
+            let data = NSData(contentsOf: documentURL)
+            let imgView = UIImageView(image: UIImage(data: data! as Data))
             
-            let nsImage = UIImage(data: currentImage!)!
-            let imgView = UIImageView(image: nsImage)
+            //let nsImage = UIImage(data: currentImage!)!
+            //let imgView = UIImageView(image: nsImage)
             let subView = cView!.subviews[0]
             imgView.frame = CGRect(x: 0, y: 0, width: subView.bounds.width  , height:  subView.bounds.height)
             imgView.contentMode = .scaleAspectFit
@@ -529,7 +538,8 @@ class ViewController: UIViewController {
             // [VIDEO]
             print("CURRENTMEDIAURL")
             print(currentMediaURL)
-            let player = AVPlayer(url: URL(string:currentMediaURL!)!)
+            let player = AVPlayer(url: documentURL)
+            //let player = AVPlayer(url: URL(string:currentMediaURL!)!)
             let vidLayer = AVPlayerLayer(player: player)
             currentVidLayer = vidLayer
             //vidLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
@@ -597,15 +607,23 @@ class ViewControllerNP: UIViewController {
         if currentVidLayer != nil {
             currentVidLayer?.removeFromSuperlayer()
         }
+        let tempURL:URL = URL(string:currentMediaURL!)!
+        let mediaPath = tempURL.absoluteString
+        let dataPath = text != "" ? text : String(mediaPath[mediaPath.lastIndex(of: "/")!...].dropFirst(1))
+        //  Find Application Support directory
+        let fileManager = FileManager.default
+        let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        //  Create document
+        let documentURL = appSupportURL.appendingPathComponent (dataPath)
         if currentMediaBool! {
             // [IMAGE]
             print("LOOK HERE")
             //let url:URL = URL(string:currentMediaURL!)!
-            //let data = NSData(contentsOf: url)
-            //let imgView = UIImageView(image: UIImage(data: data! as Data))
+            let data = NSData(contentsOf: documentURL)
+            let imgView = UIImageView(image: UIImage(data: data! as Data))
             
-            let nsImage = UIImage(data: currentImage!)!
-            let imgView = UIImageView(image: nsImage)
+            //let nsImage = UIImage(data: currentImage!)!
+            //let imgView = UIImageView(image: nsImage)
             imgView.frame = CGRect(x: 0, y: 0, width: view.bounds.width  , height:  view.bounds.height)
             imgView.contentMode = .scaleAspectFit
             imgView.clipsToBounds = true
@@ -616,7 +634,8 @@ class ViewControllerNP: UIViewController {
             // [VIDEO]
             //print("CURRENTMEDIAURL")
             //print(currentMediaURL)
-            let player = AVPlayer(url: URL(string:currentMediaURL!)!)
+            let player = AVPlayer(url: documentURL)
+            //let player = AVPlayer(url: URL(string:currentMediaURL!)!)
             let vidLayer = AVPlayerLayer(player: player)
             currentVidLayer = vidLayer
             //vidLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill

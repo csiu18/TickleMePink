@@ -67,10 +67,24 @@ struct ImagePicker: UIViewControllerRepresentable {
         func imagePickerController(_ picker: UIImagePickerController,
                                    didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let mediaType = info[UIImagePickerController.InfoKey.mediaType] as? String {
+                
+                if let uiImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+                    image = Image(uiImage: uiImage)
+                } else {
+                    let tempURL = info[UIImagePickerController.InfoKey.mediaURL] as! URL
+                    let asset = AVAsset.init(url: tempURL)
+                    let generator = AVAssetImageGenerator.init(asset: asset)
+                    var time: CMTime = asset.duration
+                    time.value = 0
+                    let cgImage = try! generator.copyCGImage(at: time, actualTime: nil)
+                    let temp = UIImage(cgImage: cgImage) //firstFrame is UIImage in table cell
+                    image = Image(uiImage: temp)
+                }
+                
                 if mediaType  == "public.image" {
                     url = info[UIImagePickerController.InfoKey.imageURL] as? NSURL
                     isImage = true
-                    /*
+                    
                     let imageURL = info[UIImagePickerController.InfoKey.imageURL] as? URL
                     let imageData = NSData(contentsOf: imageURL!)
                     
@@ -87,24 +101,24 @@ struct ImagePicker: UIViewControllerRepresentable {
                         let fileManager = FileManager.default
                         let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
                         //  Create subdirectory
-                        let directoryURL = appSupportURL.appendingPathComponent("com.myCompany.myApp")
-                        try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+                        //let directoryURL = appSupportURL.appendingPathComponent("com.myCompany.myApp")
+                        //try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
                         //  Create document
-                        let documentURL = directoryURL.appendingPathComponent (dataPath)
+                        let documentURL = appSupportURL.appendingPathComponent (dataPath)
                         url = documentURL as NSURL
                         try imageData?.write (to: documentURL)
                     }
                     catch
                     {
                       print("An error occured")
-                    } */
+                    }
                 }
 
                 if mediaType == "public.movie" {
                     url = info[UIImagePickerController.InfoKey.mediaURL] as? NSURL
                     isImage = false
                 
-                   /* let videoURL = info[UIImagePickerController.InfoKey.mediaURL] as? URL
+                    let videoURL = info[UIImagePickerController.InfoKey.mediaURL] as? URL
                     let videoData = NSData(contentsOf: videoURL!)
                     
                     //Creates Date-Based URL
@@ -120,21 +134,21 @@ struct ImagePicker: UIViewControllerRepresentable {
                         let fileManager = FileManager.default
                         let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
                         //  Create subdirectory
-                        let directoryURL = appSupportURL.appendingPathComponent("com.myCompany.myApp")
-                        try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+                        //let directoryURL = appSupportURL.appendingPathComponent("com.myCompany.myApp")
+                        //try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
                         //  Create document
-                        let documentURL = directoryURL.appendingPathComponent (dataPath)
+                        let documentURL = appSupportURL.appendingPathComponent (dataPath)
                         url = documentURL as NSURL
                         try videoData?.write (to: documentURL)
                     }
                     catch
                     {
                       print("An error occured")
-                    } */
+                    }
                 }
             }
 
-            if let uiImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            /* if let uiImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
                 image = Image(uiImage: uiImage)
             } else {
                 let tempURL = info[UIImagePickerController.InfoKey.mediaURL] as! URL
@@ -145,7 +159,7 @@ struct ImagePicker: UIViewControllerRepresentable {
                 let cgImage = try! generator.copyCGImage(at: time, actualTime: nil)
                 let temp = UIImage(cgImage: cgImage) //firstFrame is UIImage in table cell
                 image = Image(uiImage: temp)
-            }
+            } */
             
             presentationMode.dismiss()
  
