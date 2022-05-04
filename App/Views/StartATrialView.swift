@@ -177,6 +177,8 @@ struct TrialView: View {
                             strokeStart = []
                             strokeStamps = []
                             self.presentingTrial = false
+                            self.screenNames = []
+                            self.trialStrokes = []
                             isLast = false
                         }, label: {
                             Text("End Trial")
@@ -206,6 +208,8 @@ struct TrialView: View {
                         strokeStart = []
                         strokeStamps = []
                         self.presentingTrial = false
+                        self.screenNames = []
+                        self.trialStrokes = []
                         isLast = false
                     }, label: {
                         Text("End Trial")
@@ -232,6 +236,9 @@ struct TrialView: View {
                         strokeStart = []
                         strokeStamps = []
                         self.presentingTrial = false
+                        self.screenNames = []
+                        self.trialStrokes = []
+                        cView?.drawing = PKDrawing()
                         isLast = false
                     }, label: {
                         Text("End Trial")
@@ -268,9 +275,13 @@ struct TrialView: View {
             }*/ else {
                 Text("[currType]: Screen Type Error")
                 Button("Close") {
-                    strokeStamps = []
                     strokeStart = []
+                    strokeStamps = []
                     self.presentingTrial = false
+                    self.screenNames = []
+                    self.trialStrokes = []
+                    cView?.drawing = PKDrawing()
+                    isLast = false
                 }
             }
         } else if isLast {
@@ -326,6 +337,8 @@ struct TrialView: View {
                             strokeStart = []
                             strokeStamps = []
                             self.presentingTrial = false
+                            self.screenNames = []
+                            self.trialStrokes = []
                             isLast = false
                         }
                     }
@@ -601,8 +614,8 @@ class ViewControllerNP: UIViewController {
             view.sendSubviewToBack(imgView)
         } else if !currentMediaBool! {
             // [VIDEO]
-            print("CURRENTMEDIAURL")
-            print(currentMediaURL)
+            //print("CURRENTMEDIAURL")
+            //print(currentMediaURL)
             let player = AVPlayer(url: URL(string:currentMediaURL!)!)
             let vidLayer = AVPlayerLayer(player: player)
             currentVidLayer = vidLayer
