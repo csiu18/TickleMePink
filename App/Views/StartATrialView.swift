@@ -32,6 +32,7 @@ struct StartATrialView: View {
     @State private var screenLength = -1
     @State private var screenIndex = 0
     @State private var partNumber = ""
+    @State private var showEmptyMessage = false
     @FocusState private var tfFocus: Bool
     @Environment(\.managedObjectContext) var viewContext
     @FetchRequest(entity: TrialSettings.entity(), sortDescriptors: [])
@@ -55,20 +56,34 @@ struct StartATrialView: View {
                 Text("Participant Number")
                 TextField("", text: $partNumber).textFieldStyle(.roundedBorder).focused($tfFocus)
                 Text("Participant Condition")
-                Picker("", selection: $partCondIndex) {
-                    Text("Select Participant Condition...").tag(-1)
-                    
-                    ForEach(self.trialSettings.indices, id:\.self) { index in
-                        Text(self.trialSettings[index].partCondition ?? "").tag(index)
-                    }.onChange(of: self.partCondIndex) { newTrialSetting in
-                        if partCondIndex != -1 {
-                            self.screens = self.trialSettings[self.partCondIndex].screenToTrialSettings?.array as! [Screen]
-                        } else {
-                            self.screens = []
+                if (trialSettings.indices.isEmpty) {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            VStack {
+                                Text("No conditions found.").font(.title)
+                                Text("Please go back to Create Trial Settings to create a condition.").font(.title)
+                            }
+                            Spacer()
                         }
-                        self.screenLength = screens.count
+                        Spacer()
                     }
-                }.padding(.bottom, 50)
+                } else {
+                    Picker("", selection: $partCondIndex) {
+                        Text("Select Participant Condition...").tag(-1)
+                        ForEach(self.trialSettings.indices, id:\.self) { index in
+                            Text(self.trialSettings[index].partCondition ?? "").tag(index)
+                        }.onChange(of: self.partCondIndex) { newTrialSetting in
+                            if partCondIndex != -1 {
+                                self.screens = self.trialSettings[self.partCondIndex].screenToTrialSettings?.array as! [Screen]
+                            } else {
+                                self.screens = []
+                            }
+                            self.screenLength = screens.count
+                        }
+                    }.padding(.bottom, 50)
+                }
             
                 Text("Trial Sequence")
                 ScrollView() {
@@ -158,6 +173,18 @@ struct TrialView: View {
                 // [INSTRUCTIONS]
                 VStack {
                     HStack {
+                        Button(action: {
+                            strokeStart = []
+                            strokeStamps = []
+                            self.presentingTrial = false
+                            isLast = false
+                        }, label: {
+                            Text("End Trial")
+                                .padding(8)
+                                .foregroundColor(Color.white)
+                                .background(Color.gray)
+                                .cornerRadius(8)
+                        })
                         Spacer().frame(maxWidth: .infinity)
                         Button(action: incrAndRefresh, label: {
                             Text("Next")
@@ -175,6 +202,18 @@ struct TrialView: View {
             } else if currType == 1 {
                 // [IMAGE] (but empty)
                 HStack {
+                    Button(action: {
+                        strokeStart = []
+                        strokeStamps = []
+                        self.presentingTrial = false
+                        isLast = false
+                    }, label: {
+                        Text("End Trial")
+                            .padding(8)
+                            .foregroundColor(Color.white)
+                            .background(Color.gray)
+                            .cornerRadius(8)
+                    })
                     Spacer().frame(maxWidth: .infinity)
                     Button(action: incrAndRefresh, label: {
                         Text("Next")
@@ -189,6 +228,18 @@ struct TrialView: View {
             } else if currType == 2 /*|| mediaBool == true */{
                 // [IMAGE]
                 HStack {
+                    Button(action: {
+                        strokeStart = []
+                        strokeStamps = []
+                        self.presentingTrial = false
+                        isLast = false
+                    }, label: {
+                        Text("End Trial")
+                            .padding(8)
+                            .foregroundColor(Color.white)
+                            .background(Color.gray)
+                            .cornerRadius(8)
+                    })
                     Spacer().frame(maxWidth: .infinity)
                     Button(action: incrAndRefresh, label: {
                         Text("Next")
