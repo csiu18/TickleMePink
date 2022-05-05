@@ -22,6 +22,8 @@ struct EditTrialSettingsView: View {
     @State private var insertIndex = -1
     @State private var screens: [Screen] = []
     @State private var toBeEdited: Int = -1
+    @State private var confirmationShow: Bool = false
+    @State private var isScreensSaveAlert: Bool = false
 
     private var gridLayout = [GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
                               GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
@@ -32,20 +34,28 @@ struct EditTrialSettingsView: View {
             Text("Edit Trial Settings").font(.title)
             VStack(alignment: .leading) {
                 Text("Participant Condition")
-                Picker("", selection: $partCondIndex) {
-                    Text("Select Participant Condition...").tag(-1)
-                    
-                    ForEach(self.trialSettings.indices, id:\.self) { index in
-                        Text(self.trialSettings[index].partCondition ?? "").tag(index)
-                    }.onChange(of: self.partCondIndex) { newTrialSetting in
-                        if partCondIndex != -1 {
-                            self.screens = self.trialSettings[self.partCondIndex].screenToTrialSettings?.array as! [Screen]
-                        } else {
-                            self.screens = []
+                HStack {
+                    Picker("", selection: $partCondIndex) {
+                        Text("Select Participant Condition...").tag(-1)
+                        
+                        ForEach(self.trialSettings.indices, id:\.self) { index in
+                            Text(self.trialSettings[index].partCondition ?? "").tag(index)
+                        }.onChange(of: self.partCondIndex) { newTrialSetting in
+                            if partCondIndex != -1 {
+                                self.screens = self.trialSettings[self.partCondIndex].screenToTrialSettings?.array as! [Screen]
+                            } else {
+                                self.screens = []
+                            }
                         }
                     }
+                    if (self.partCondIndex != -1) {
+                        Spacer()
+                        Button("Delete Sequence", role: .destructive, action: {self.confirmationShow = true})
+                            .confirmationDialog("Are you sure?", isPresented: $confirmationShow, titleVisibility: .visible) {
+                                Button("Yes", role: .destructive, action: deleteSequence)
+                            }
+                    }
                 }.padding(.bottom, self.partCondIndex == -1 ? 50 : 10)
-                
                 if (self.partCondIndex != -1) {
                     Text("New Participant Condition")
                     TextField("", text:$partCondition)
@@ -56,27 +66,49 @@ struct EditTrialSettingsView: View {
                 Text("Trial Sequence")
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
-                        ForEach(self.screens.indices, id: \.self) { index in
-                            if self.screens[index].type == 0{
+                        if (self.screens.count > 0) {
+                            VStack{
                                 Button {
-                                    editScreen(toBeEdited: index)
+                                    addScreen(index: 0)
                                 } label: {
                                     Rectangle()
-                                        .stroke(Color.black, lineWidth: 2)
-                                        .foregroundColor(Color.white)
+                                        .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
                                         .frame(width: 250, height: 185)
-                                        .overlay(Text("Instructions").foregroundColor(.black))
+                                        .overlay(Text("Add More").foregroundColor(.black))
                                 }
-                            } else {
-                                Button {
-                                    editScreen(toBeEdited: index)
-                                } label: {
-                                    Image(uiImage: UIImage(data: self.screens[index].media!.data!)!)
-                                        .resizable()
-                                        .frame(width: 250, height: 185)
-                                        .border(Color.black, width: 2)
+                                Text(" ")
+                            }
+                            Button {
+                                addScreen(index: 0)
+                            } label: {
+                                Image(systemName: "arrow.right")
+                            }
+                        }
+                        ForEach(self.screens.indices, id: \.self) { index in
+                            VStack {
+                                if self.screens[index].type == 0{
+                                    Button {
+                                        editScreen(toBeEdited: index)
+                                    } label: {
+                                        Rectangle()
+                                            .stroke(Color.black, lineWidth: 2)
+                                            .foregroundColor(Color.white)
+                                            .frame(width: 250, height: 185)
+                                            .overlay(Text("Instructions").foregroundColor(.black))
+                                    }
+                                } else {
+                                    Button {
+                                        editScreen(toBeEdited: index)
+                                    } label: {
+                                        Image(uiImage: UIImage(data: self.screens[index].media!.data!)!)
+                                            .resizable()
+                                            .frame(width: 250, height: 185)
+                                            .border(Color.black, width: 2)
+                                    }
+                                
                                 }
-                            
+                                Text(self.screens[index].type == 0 ? " " : self.screens[index].media!.name!)
+                                    .lineLimit(1)
                             }
                             Button {
                                 addScreen(index: index + 1)
@@ -85,17 +117,23 @@ struct EditTrialSettingsView: View {
                             }
                         }
                         if self.partCondIndex != -1 {
-                            Button {
-                                addScreen(index: self.screens.endIndex)
-                            } label: {
-                                Rectangle()
-                                    .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
-                                    .frame(width: 250, height: 185)
-                                    .overlay(Text("Add More").foregroundColor(.black))
+                            VStack{
+                                Button {
+                                    addScreen(index: self.screens.endIndex)
+                                } label: {
+                                    Rectangle()
+                                        .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
+                                        .frame(width: 250, height: 185)
+                                        .overlay(Text("Add More").foregroundColor(.black))
+                                }
+                                Text(" ")
                             }
                         }
                     }
-                }
+                }.overlay(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(Color.red, lineWidth: self.isScreensSaveAlert ? 1 : 0)
+                )
             }
             Spacer()
             if self.partCondIndex != -1 {
@@ -118,6 +156,22 @@ struct EditTrialSettingsView: View {
         })
     }
     
+    func deleteSequence() {
+        if (self.partCondIndex != -1) {
+            let currSequence = self.trialSettings[self.partCondIndex]
+            self.viewContext.delete(currSequence)
+        }
+        
+        do {
+            try self.viewContext.save()
+        } catch {
+            print("Error in deleting sequence: \(error.localizedDescription)")
+        }
+
+        self.presentationMode.wrappedValue.dismiss()
+        
+    }
+    
     func editScreen(toBeEdited: Int) {
         self.toBeEdited = toBeEdited
         self.isEditModalPresented = true
@@ -130,6 +184,13 @@ struct EditTrialSettingsView: View {
     
     func saveSequence() {
         if (self.partCondIndex != -1) {
+            if (self.screens.count == 0) {
+                self.isScreensSaveAlert = true
+                return
+            }
+            
+            self.isScreensSaveAlert = false
+            
             let currSettings = trialSettings[self.partCondIndex]
             
             let orderedSet = NSOrderedSet(array: self.screens)
