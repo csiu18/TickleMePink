@@ -41,41 +41,49 @@
       "size" : "60x60"
     },
     {
+      "filename" : "App Icon (20 x 20).jpg",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "20x20"
     },
     {
+      "filename" : "App Icon (40 × 40 px).png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
+      "filename" : "App Icon (29 x 29).jpg",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "29x29"
     },
     {
+      "filename" : "App Icon (58 × 58 px).png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
+      "filename" : "App Icon (40 × 40 px)-1.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "40x40"
     },
     {
+      "filename" : "App Icon (80 × 80 px).png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
+      "filename" : "App Icon (76 × 76 px).png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "76x76"
     },
     {
+      "filename" : "App Icon (152 × 152 px).png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "76x76"

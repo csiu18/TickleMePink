@@ -25,6 +25,8 @@ struct UploadMediaView: View {
     @State var mediaPath: String?
     @State private var text: String = ""
     
+    @State private var nameExistsBool: Bool = false
+    
    // @State var url2: String = ""
     
     // get the context
@@ -39,6 +41,8 @@ struct UploadMediaView: View {
                 .font(.system(size: 20.0))
                 .foregroundColor(Color.black)
                 .padding(.top, 30)
+            
+            nameExistsBool ? Text("Name already exists").foregroundColor(Color.red).padding(.bottom, -15).padding(.top, 5) : nil
             
             TextField("Name media (optional)", text: $text)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -62,23 +66,27 @@ struct UploadMediaView: View {
 
             //show button to upload iamge
             Button(action: {
-                let uiImage: UIImage = self.selectedImage.asUIImage()
-                let imageData = uiImage.jpegData(compressionQuality: 1.0)
-                let url2: NSURL = mediaURL!
-                let mediaType: Bool = type!
-                mediaPath = url2.absoluteString
-                
-                let imageInstance = Media(context: viewContext)
-                imageInstance.data = imageData
-                imageInstance.name = text != "" ? text : String(mediaPath![mediaPath!.lastIndex(of: "/")!...].dropFirst(1))
-                imageInstance.isImage = mediaType
-                imageInstance.url = mediaPath
-                
-                try? viewContext.save()
-                
-                self.selectedImage = Image("")
-                text = ""
-                
+                if (mediaURL != nil) {
+                    nameExistsBool = nameExists(mediaData: configs, mediaName: text)
+                    let uiImage: UIImage = self.selectedImage.asUIImage()
+                    let imageData = uiImage.jpegData(compressionQuality: 1.0)
+                    let url2: NSURL = mediaURL!
+                    let mediaType: Bool = type!
+                    mediaPath = url2.absoluteString
+                    
+                    if ((text != "" && !nameExistsBool) || text == "") {
+                        let imageInstance = Media(context: viewContext)
+                        imageInstance.data = imageData
+                        imageInstance.name = text != "" ? text : String(mediaPath![mediaPath!.lastIndex(of: "/")!...].dropFirst(1))
+                        imageInstance.isImage = mediaType
+                        imageInstance.url = mediaPath
+                    
+                        try? viewContext.save()
+                        
+                        self.selectedImage = Image("")
+                        text = ""
+                    }
+                }
             }, label: {
                 Text("Save")
                     .fontWeight(.medium)
