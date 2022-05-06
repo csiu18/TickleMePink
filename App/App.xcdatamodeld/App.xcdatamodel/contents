@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E230" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E258" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="DrawingData" representedClassName="DrawingData" syncable="YES">
         <attribute name="identifier" optional="YES" attributeType="String"/>
         <attribute name="partCond" optional="YES" attributeType="String"/>
@@ -17,7 +17,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="time" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="url" optional="YES" attributeType="String"/>
-        <relationship name="screen" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Screen" inverseName="media" inverseEntity="Screen"/>
+        <relationship name="screen" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Screen" inverseName="media" inverseEntity="Screen"/>
     </entity>
     <entity name="Screen" representedClassName="Screen" syncable="YES">
         <attribute name="instructions" optional="YES" attributeType="String"/>
