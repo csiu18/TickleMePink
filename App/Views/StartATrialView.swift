@@ -34,6 +34,8 @@ struct StartATrialView: View {
     @State private var screenIndex = 0
     @State private var partNumber = ""
     @State private var showEmptyMessage = false
+    @State private var isPartNumSaveAlert: Bool = false
+    @State private var isSeqSaveAlert: Bool = false
     @FocusState private var tfFocus: Bool
     @Environment(\.managedObjectContext) var viewContext
     @FetchRequest(entity: TrialSettings.entity(), sortDescriptors: [])
@@ -51,20 +53,32 @@ struct StartATrialView: View {
     }
     
     var body: some View {
-        Text("Start Trial").font(.title)
         VStack(spacing: 20){
             VStack(alignment: .leading) {
-                Text("Participant Number")
+                HStack{
+                    Text("Participant Number").font(.system(size: 20.0))
+                    Text("*").font(.system(size: 20.0)).foregroundColor(Color.red)
+                }
                 TextField("", text: $partNumber).textFieldStyle(.roundedBorder).focused($tfFocus)
-                Text("Participant Condition")
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color.red, lineWidth: self.isPartNumSaveAlert ? 1 : 0)
+                    )
+                    .padding(.bottom, 30)
+                HStack {
+                    Text("Participant Condition").font(.system(size: 20.0))
+                    Text("*").font(.system(size: 20.0)).foregroundColor(Color.red)
+                }
                 if (trialSettings.indices.isEmpty) {
                     VStack {
                         Spacer()
                         HStack {
                             Spacer()
                             VStack {
-                                Text("No conditions found.").font(.title)
-                                Text("Please go back to Create Trial Settings to create a condition.").font(.title)
+                                Text("No conditions found.").font(.title).foregroundColor(Color.gray)
+                                Text("Please go back to Create Trial Settings to create a condition.")
+                                    .font(.title)
+                                    .foregroundColor(Color.gray)
                             }
                             Spacer()
                         }
@@ -83,30 +97,42 @@ struct StartATrialView: View {
                             }
                             self.screenLength = screens.count
                         }
-                    }.padding(.bottom, 50)
+                    }
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color.red, lineWidth: self.isSeqSaveAlert ? 1 : 0)
+                    )
+                    .padding(.bottom, 50)
                 }
             
-                Text("Trial Sequence")
+                Text("Trial Sequence").font(.system(size: 20.0))
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
                         ForEach(self.screens.indices, id: \.self) { index in
-                            if self.screens[index].type == 0 {
-                                Rectangle()
-                                    .stroke(Color.black, lineWidth: 2)
-                                    .foregroundColor(Color.white)
-                                    .frame(width: 250, height: 185)
-                                    .overlay(Text("Instructions").foregroundColor(.black))
-                            } else {
-                                Image(uiImage: UIImage(data: self.screens[index].media!.data!)!)
-                                    .resizable()
-                                    .frame(width: 250, height: 185)
-                                    .border(Color.black, width: 2)
+                            VStack{
+                                if self.screens[index].type == 0 {
+                                    Rectangle()
+                                        .stroke(Color.black, lineWidth: 2)
+                                        .foregroundColor(Color.white)
+                                        .frame(width: 250, height: 185)
+                                        .overlay(Text("Instructions").foregroundColor(.black))
+                                } else {
+                                        Image(uiImage: UIImage(data: self.screens[index].media!.data!)!)
+                                            .resizable()
+                                            .frame(width: 250, height: 185)
+                                            .border(Color.black, width: 2)
+  
+                                }
+                                Text(self.screens[index].type == 0 ? " " : self.screens[index].media!.name!)
+                                    .lineLimit(1)
                             }
+                            
                             Spacer()
                         }
                     }
                 }
             }
+            
             HStack {
                 Spacer().frame(maxWidth: .infinity)
                 Button(action: {
@@ -114,7 +140,8 @@ struct StartATrialView: View {
                     startTrial()
                 }, label: {
                     Text("Start Trial")
-                        .padding(8)
+                        .fontWeight(.medium)
+                        .padding(7).padding(.leading, 12).padding(.trailing, 12)
                         .foregroundColor(Color.white)
                         .background(Color.green)
                         .cornerRadius(8)
@@ -128,7 +155,10 @@ struct StartATrialView: View {
                 self.presentingInstr = true
             }*/
             Spacer()
-        }.padding(20)
+        }
+        .navigationBarTitle("Start Trial")
+        .navigationBarTitleDisplayMode(.inline)
+        .padding(20)
         .fullScreenCover(isPresented: $presentingTrial) {
             TrialView(presentingTrial: self.$presentingTrial, screenIndex: self.screenIndex, screenLength: self.screenLength, screens: self.screens, partNum: self.partNumber, partCond: self.trialSettings[partCondIndex].partCondition!)
         }
@@ -139,7 +169,14 @@ struct StartATrialView: View {
     }
     
     func startTrial() {
-        if screenIndex < screenLength {
+        if self.partNumber == "" {
+            self.isPartNumSaveAlert = true
+        }
+        if screenIndex >= screenLength {
+            self.isSeqSaveAlert = true
+            print("here")
+        }
+        if screenIndex < screenLength && self.partNumber != "" {
             self.presentingTrial = true
         } else {
             print("[startTrial]: screenLength invalid for trial start")
@@ -157,6 +194,7 @@ struct TrialView: View {
     @State var trialStrokes: [[PKStroke]] = []
     @State var partCond: String
     @State var screenNames: [String] = []
+    @State private var confirmationShow: Bool = false
     
     var body: some View {
         if screenIndex < screenLength {
@@ -174,24 +212,31 @@ struct TrialView: View {
                 // [INSTRUCTIONS]
                 VStack {
                     HStack {
-                        Button(action: {
-                            strokeStart = []
-                            strokeStamps = []
-                            self.presentingTrial = false
-                            self.screenNames = []
-                            self.trialStrokes = []
-                            isLast = false
+                        Button(role: .destructive, action: {
+                            self.confirmationShow = true
                         }, label: {
                             Text("End Trial")
-                                .padding(8)
+                                .fontWeight(.medium)
+                                .padding(7).padding(.leading, 12).padding(.trailing, 12)
                                 .foregroundColor(Color.white)
-                                .background(Color.gray)
+                                .background(Color.gray.opacity(0.5))
                                 .cornerRadius(8)
+                                .padding(.leading, 10)
                         })
+                        .confirmationDialog("Are you sure?", isPresented: $confirmationShow, titleVisibility: .visible) {
+                            Button("Yes", role: .destructive, action: {
+                                strokeStart = []
+                                strokeStamps = []
+                                self.presentingTrial = false
+                                self.screenNames = []
+                                self.trialStrokes = []
+                                isLast = false})
+                        }
                         Spacer().frame(maxWidth: .infinity)
                         Button(action: incrAndRefresh, label: {
                             Text("Next")
-                                .padding(8)
+                                .fontWeight(.medium)
+                                .padding(7).padding(.leading, 12).padding(.trailing, 12)
                                 .foregroundColor(Color.white)
                                 .background(Color.red)
                                 .cornerRadius(8)
@@ -205,20 +250,27 @@ struct TrialView: View {
             } else if currType == 1 {
                 // [IMAGE] (but empty)
                 HStack {
-                    Button(action: {
-                        strokeStart = []
-                        strokeStamps = []
-                        self.presentingTrial = false
-                        self.screenNames = []
-                        self.trialStrokes = []
-                        isLast = false
-                    }, label: {
+                    Button(role: .destructive, action: {self.confirmationShow = true},
+                    label: {
                         Text("End Trial")
-                            .padding(8)
+                            .fontWeight(.medium)
+                            .padding(7).padding(.leading, 12).padding(.trailing, 12)
                             .foregroundColor(Color.white)
-                            .background(Color.gray)
+                            .background(Color.gray.opacity(0.5))
                             .cornerRadius(8)
+                            .padding(.leading, 10)
                     })
+                    .confirmationDialog("Are you sure?", isPresented: $confirmationShow, titleVisibility: .visible) {
+                        Button("Yes", role: .destructive, action: {
+                            strokeStart = []
+                            strokeStamps = []
+                            self.presentingTrial = false
+                            self.screenNames = []
+                            self.trialStrokes = []
+                            isLast = false
+                            
+                        })
+                    }
                     Spacer().frame(maxWidth: .infinity)
                     Button(action: incrAndRefresh, label: {
                         Text("Next")
@@ -233,21 +285,28 @@ struct TrialView: View {
             } else if currType == 2 /*|| mediaBool == true */{
                 // [IMAGE]
                 HStack {
-                    Button(action: {
-                        strokeStart = []
-                        strokeStamps = []
-                        self.presentingTrial = false
-                        self.screenNames = []
-                        self.trialStrokes = []
-                        cView?.drawing = PKDrawing()
-                        isLast = false
+                    Button(role: .destructive, action: {
+                        self.confirmationShow = true
                     }, label: {
                         Text("End Trial")
-                            .padding(8)
+                            .fontWeight(.medium)
+                            .padding(7).padding(.leading, 12).padding(.trailing, 12)
                             .foregroundColor(Color.white)
-                            .background(Color.gray)
+                            .background(Color.gray.opacity(0.5))
                             .cornerRadius(8)
+                            .padding(.leading, 10)
                     })
+                    .confirmationDialog("Are you sure?", isPresented: $confirmationShow, titleVisibility: .visible) {
+                        Button("Yes", role: .destructive, action: {
+                            strokeStart = []
+                            strokeStamps = []
+                            self.presentingTrial = false
+                            self.screenNames = []
+                            self.trialStrokes = []
+                            cView?.drawing = PKDrawing()
+                            isLast = false
+                        })
+                    }
                     Spacer().frame(maxWidth: .infinity)
                     Button(action: incrAndRefresh, label: {
                         Text("Next")
@@ -329,18 +388,22 @@ struct TrialView: View {
                             isLast = false
                         }, label: {
                             Text("Save Data")
-                                .padding(10)
+                                .fontWeight(.medium)
+                                .padding(7).padding(.leading, 12).padding(.trailing, 12)
                                 .foregroundColor(Color.white)
                                 .background(Color.blue)
-                                .cornerRadius(6)
-                        })
-                        Button("Close") {
-                            strokeStart = []
-                            strokeStamps = []
-                            self.presentingTrial = false
-                            self.screenNames = []
-                            self.trialStrokes = []
-                            isLast = false
+                                .cornerRadius(8)
+                        }).padding(.top, 5)
+                        Button("Close",role: .destructive, action: {self.confirmationShow = true})
+                        .confirmationDialog("Are you sure?", isPresented: $confirmationShow, titleVisibility: .visible) {
+                            Button("Yes", role: .destructive, action: {
+                                strokeStart = []
+                                strokeStamps = []
+                                self.presentingTrial = false
+                                self.screenNames = []
+                                self.trialStrokes = []
+                                isLast = false
+                            })
                         }
                     }
                     Spacer()
