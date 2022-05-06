@@ -34,7 +34,8 @@ struct ModalViewModifier<T: View>: ViewModifier {
                         HStack {
                             Spacer()
                             Text(self.title)
-                                .font(.title)
+                                .font(.system(size: 20.0))
+                                .foregroundColor(Color.black)
                                 .offset(y: 30)
                                 .padding(.bottom, 40)
                             Spacer()
@@ -44,12 +45,12 @@ struct ModalViewModifier<T: View>: ViewModifier {
                                 Image(systemName: "xmark")
                                     .foregroundColor(Color(red: 0.446, green: 0.446, blue: 0.446))
                             }
-                            .offset(x: -20, y: 20)
+                            .offset(x: -20, y: 0)
                 
                                 
                         }
                         Spacer()
-                        modal.padding(20)
+                        modal.padding(30)
                         Spacer()
                     }
 

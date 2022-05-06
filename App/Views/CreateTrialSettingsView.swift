@@ -28,10 +28,15 @@ struct CreateTrialSettingsView: View {
     
     var body: some View {
         VStack(spacing: 20){
-            Text("Create Trial Settings").font(.title)
             VStack(alignment: .leading) {
-                Text("Participant Condition *")
-                    .foregroundColor(self.isPartCondSaveAlert ? Color.red : Color.black)
+                HStack {
+                    Text("Participant Condition")
+                        .font(.system(size: 20.0))
+                        .foregroundColor(Color.black)
+                    Text("*")
+                        .font(.system(size: 20.0))
+                        .foregroundColor(Color.red)
+                }
                 TextField("", text:$partCondition)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .overlay(
@@ -40,7 +45,7 @@ struct CreateTrialSettingsView: View {
                     )
                     .padding(.bottom, 50)
             
-                Text("Trial Sequence")
+                Text("Trial Sequence").font(.system(size: 20.0))
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
                         if (self.screens.count > 0) {
@@ -51,7 +56,7 @@ struct CreateTrialSettingsView: View {
                                     Rectangle()
                                         .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
                                         .frame(width: 250, height: 185)
-                                        .overlay(Text("Add More").foregroundColor(.black))
+                                        .overlay(Text("Add More").foregroundColor(.black)).font(.system(size: 20.0))
                                 }
                                 Text(" ")
                             }
@@ -100,7 +105,7 @@ struct CreateTrialSettingsView: View {
                                 Rectangle()
                                     .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
                                     .frame(width: 250, height: 185)
-                                    .overlay(Text("Add More").foregroundColor(.black))
+                                    .overlay(Text("Add More").foregroundColor(.black)).font(.system(size: 20.0))
                                                                 
                             }
                             Text(" ")
@@ -114,8 +119,17 @@ struct CreateTrialSettingsView: View {
             }
 
             Spacer()
-            Button("Save Sequence", action: saveSequence)
+            Button(action: saveSequence) {
+                Text("Save Sequence")
+                    .fontWeight(.medium)
+                    .padding(7).padding(.leading, 12).padding(.trailing, 12)
+                    .foregroundColor(Color.white)
+                    .background(Color.blue)
+                    .cornerRadius(8)
+            }
         }
+        .navigationBarTitle("Create Trial Settings")
+        .navigationBarTitleDisplayMode(.inline)
         //.onAppear(perform: loadDefaultScreen)
         .padding(20)
         .modifier(ModalViewModifier(isPresented: $isCreateModalPresented,

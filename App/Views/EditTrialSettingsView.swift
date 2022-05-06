@@ -31,9 +31,8 @@ struct EditTrialSettingsView: View {
     
     var body: some View {
         VStack(spacing: 20){
-            Text("Edit Trial Settings").font(.title)
             VStack(alignment: .leading) {
-                Text("Participant Condition")
+                Text("Participant Condition").font(.system(size: 20.0))
                 HStack {
                     Picker("", selection: $partCondIndex) {
                         Text("Select Participant Condition...").tag(-1)
@@ -50,20 +49,27 @@ struct EditTrialSettingsView: View {
                     }
                     if (self.partCondIndex != -1) {
                         Spacer()
-                        Button("Delete Sequence", role: .destructive, action: {self.confirmationShow = true})
+                        Button(role: .destructive, action: {self.confirmationShow = true}) {
+                            Text("Delete Sequence")
+                                .fontWeight(.medium)
+                                .padding(7).padding(.leading, 12).padding(.trailing, 12)
+                                .foregroundColor(Color.white)
+                                .background(Color.red)
+                                .cornerRadius(8)
+                        }
                             .confirmationDialog("Are you sure?", isPresented: $confirmationShow, titleVisibility: .visible) {
                                 Button("Yes", role: .destructive, action: deleteSequence)
                             }
                     }
                 }.padding(.bottom, self.partCondIndex == -1 ? 50 : 10)
                 if (self.partCondIndex != -1) {
-                    Text("New Participant Condition")
+                    Text("New Participant Condition").font(.system(size: 20.0))
                     TextField("", text:$partCondition)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding(.bottom, 50)
                 }
                 
-                Text("Trial Sequence")
+                Text("Trial Sequence").foregroundColor(Color.black).font(.system(size: 20.0))
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
                         if (self.screens.count > 0) {
@@ -137,9 +143,18 @@ struct EditTrialSettingsView: View {
             }
             Spacer()
             if self.partCondIndex != -1 {
-                Button("Save Sequence", action: saveSequence)
+                Button(action: saveSequence) {
+                    Text("Save Sequence")
+                        .fontWeight(.medium)
+                        .padding(7).padding(.leading, 12).padding(.trailing, 12)
+                        .foregroundColor(Color.white)
+                        .background(Color.blue)
+                        .cornerRadius(8)
+                }
             }
         }
+        .navigationBarTitle("Edit Trial Settings")
+        .navigationBarTitleDisplayMode(.inline)
         .padding(20)
         .modifier(ModalViewModifier(isPresented: $isCreateModalPresented,
                                     content: {CreateTrialSettingsModalView(screens: $screens, isModalPresented: $isCreateModalPresented, insertIndex: $insertIndex)},

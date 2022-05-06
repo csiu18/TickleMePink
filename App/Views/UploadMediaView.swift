@@ -84,6 +84,7 @@ struct UploadMediaView: View {
                         try? viewContext.save()
                         
                         self.selectedImage = Image("")
+                        mediaURL = nil
                         text = ""
                     }
                 }

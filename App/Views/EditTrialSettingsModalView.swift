@@ -52,8 +52,22 @@ struct EditTrialSettingsModalView: View {
             
             Spacer()
             HStack {
-                Button("Done", action: saveScreen).padding(.top, 20)
-                Button("Remove", role: .destructive, action: deleteScreen).padding(.top, 20)
+                Button(action: saveScreen) {
+                    Text("Done")
+                        .fontWeight(.medium)
+                        .padding(7).padding(.leading, 12).padding(.trailing, 12)
+                        .foregroundColor(Color.white)
+                        .background(Color.blue)
+                        .cornerRadius(8)
+                }.padding(.top, 20).padding(.bottom, -10).padding(.trailing, 10)
+                Button(role: .destructive, action: deleteScreen) {
+                    Text("Remove")
+                        .fontWeight(.medium)
+                        .padding(7).padding(.leading, 12).padding(.trailing, 12)
+                        .foregroundColor(Color.white)
+                        .background(Color.red)
+                        .cornerRadius(8)
+                }.padding(.top, 20).padding(.bottom, -10)
             }
         }.onAppear(perform: loadMediaIndex)
     }

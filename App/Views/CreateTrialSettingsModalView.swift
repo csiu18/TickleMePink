@@ -26,20 +26,27 @@ struct MediaPreviewView: View {
                     Button {
                         selectMedia(id: i)
                     } label: {
-                        ZStack{
-                            if (!mediaData[i].isImage) {
-                                Image(systemName: "video.fill").zIndex(1)
-                                    .foregroundColor(Color.white)
+                        VStack{
+                            ZStack{
+                                if (!mediaData[i].isImage) {
+                                    Image(systemName: "video.fill").zIndex(1)
+                                        .foregroundColor(Color.white)
+                                }
+                                Image(uiImage: UIImage(data: mediaData[i].data!)!)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 150)
+                                    .cornerRadius(10)
+                                    .border(Color.black, width: self.selectedMediaIndex == i ? 4 : 0)
+                                    .cornerRadius(10)
+                                    .padding(.top, 10)
+                                    .padding(.bottom, 5)
+                              
                             }
-                            Image(uiImage: UIImage(data: mediaData[i].data!)!)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 150)
-                                .cornerRadius(10)
-                                .border(Color.black, width: self.selectedMediaIndex == i ? 4 : 0)
-                                .cornerRadius(10)
-                                .padding(.top, 10)
-                                .padding(.bottom, 5)
+                            Text(mediaData[i].name!)
+                                .foregroundColor(Color.black)
+                                .frame(height: 25)
+                                .lineLimit(1)
                         }
                     }
                 }
@@ -82,7 +89,8 @@ struct CreateTrialSettingsModalView: View {
                         Text("Instructions").tag(0)
                         Text("Static").tag(1)
                         Text("Interactive").tag(2)
-                    }.padding(.bottom, 20)
+                    }
+                    .padding(.bottom, 20)
                 }.frame(maxWidth: .infinity, alignment: .leading)
             }
             
@@ -100,7 +108,14 @@ struct CreateTrialSettingsModalView: View {
             }
             
             Spacer()
-            Button("Done", action: saveScreen).padding(.top, 20)
+            Button(action: saveScreen){
+                Text("Done")
+                    .fontWeight(.medium)
+                    .padding(7).padding(.leading, 12).padding(.trailing, 12)
+                    .foregroundColor(Color.white)
+                    .background(Color.blue)
+                    .cornerRadius(8)
+            }.padding(.top, 20).padding(.bottom, -10)
         }
     }
     
