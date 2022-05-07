@@ -27,8 +27,10 @@
     </entity>
     <entity name="TrialSettings" representedClassName="TrialSettings" syncable="YES">
         <attribute name="partCondition" optional="YES" attributeType="String"/>
-        <attribute name="strokeColor" optional="YES" attributeType="String"/>
-        <attribute name="strokeWidth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="strokeBlue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="strokeGreen" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="strokeRed" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="strokeWidth" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="screenToTrialSettings" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Screen" inverseName="trialSettings" inverseEntity="Screen"/>
     </entity>
     <elements>
@@ -36,6 +38,6 @@
         <element name="Item" positionX="-63" positionY="-18" width="128" height="44"/>
         <element name="Media" positionX="0" positionY="63" width="128" height="119"/>
         <element name="Screen" positionX="-18" positionY="36" width="128" height="89"/>
-        <element name="TrialSettings" positionX="18" positionY="63" width="128" height="89"/>
+        <element name="TrialSettings" positionX="18" positionY="63" width="128" height="119"/>
     </elements>
 </model>

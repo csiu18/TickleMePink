@@ -8,6 +8,17 @@
 import SwiftUI
 import CoreData
 
+extension UIColor {
+    var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        return (red, green, blue, alpha)
+    }
+}
 
 struct CreateTrialSettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -21,6 +32,8 @@ struct CreateTrialSettingsView: View {
     @State private var toBeEdited: Int = -1
     @State private var isPartCondSaveAlert: Bool = false
     @State private var isScreensSaveAlert: Bool = false
+    @State private var selectedColor = Color(red: 0.9882, green: 0.502, blue: 0.6471)
+    @State private var strokeWidth: Double = 5
     
     private var gridLayout = [GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
                               GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
@@ -30,9 +43,7 @@ struct CreateTrialSettingsView: View {
         VStack(spacing: 20){
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Participant Condition")
-                        .font(.system(size: 20.0))
-                        .foregroundColor(Color.black)
+                    Text("Participant Condition").font(.system(size: 20.0))
                     Text("*")
                         .font(.system(size: 20.0))
                         .foregroundColor(Color.red)
@@ -43,7 +54,7 @@ struct CreateTrialSettingsView: View {
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(Color.red, lineWidth: self.isPartCondSaveAlert ? 1 : 0)
                     )
-                    .padding(.bottom, 50)
+                    .padding(.bottom, 30)
             
                 Text("Trial Sequence").font(.system(size: 20.0))
                 ScrollView() {
@@ -56,7 +67,7 @@ struct CreateTrialSettingsView: View {
                                     Rectangle()
                                         .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
                                         .frame(width: 250, height: 185)
-                                        .overlay(Text("Add More").foregroundColor(.black)).font(.system(size: 20.0))
+                                        .overlay(Text("Add More")).font(.system(size: 20.0))
                                 }
                                 Text(" ")
                             }
@@ -96,7 +107,6 @@ struct CreateTrialSettingsView: View {
                             } label: {
                                 Image(systemName: "arrow.right")
                             }
-                            
                         }
                         VStack {
                             Button {
@@ -105,8 +115,7 @@ struct CreateTrialSettingsView: View {
                                 Rectangle()
                                     .foregroundColor(Color(red: 0.913, green: 0.913, blue: 0.913))
                                     .frame(width: 250, height: 185)
-                                    .overlay(Text("Add More").foregroundColor(.black)).font(.system(size: 20.0))
-                                                                
+                                    .overlay(Text("Add More")).font(.system(size: 20.0))
                             }
                             Text(" ")
                         }
@@ -117,7 +126,18 @@ struct CreateTrialSettingsView: View {
                         .stroke(Color.red, lineWidth: self.isScreensSaveAlert ? 1 : 0)
                 )
             }
-
+            HStack {
+                ColorPicker("Stroke Color", selection: $selectedColor)
+                    .frame(width: 160, alignment: .leading)
+                    .font(.system(size: 20.0))
+                Text("Stroke Width")
+                    .font(.system(size: 20.0))
+                    .padding(.leading, 50).padding(.trailing, 5)
+                TextField("", value: $strokeWidth, format: .number)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .frame(width: 100)
+                Spacer()
+            }
             Spacer()
             Button(action: saveSequence) {
                 Text("Save Sequence")
@@ -180,7 +200,11 @@ struct CreateTrialSettingsView: View {
         self.isScreensSaveAlert = false
         let newSettings = TrialSettings(context: self.viewContext)
         newSettings.partCondition = self.partCondition
-        
+        newSettings.strokeRed = Double(UIColor(self.selectedColor).rgba.red)
+        newSettings.strokeGreen = Double(UIColor(self.selectedColor).rgba.green)
+        newSettings.strokeBlue = Double(UIColor(self.selectedColor).rgba.blue)
+        newSettings.strokeWidth = self.strokeWidth
+    
         let orderedSet = NSOrderedSet(array: self.screens)
         newSettings.addToScreenToTrialSettings(orderedSet)
         

@@ -16,6 +16,10 @@ extension TrialSettings {
         return NSFetchRequest<TrialSettings>(entityName: "TrialSettings")
     }
 
+    @NSManaged public var strokeRed: Double
+    @NSManaged public var strokeGreen: Double
+    @NSManaged public var strokeBlue: Double
+    @NSManaged public var strokeWidth: Double
     @NSManaged public var partCondition: String?
     @NSManaged public var screenToTrialSettings: NSOrderedSet?
 

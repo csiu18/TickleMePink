@@ -24,6 +24,8 @@ struct EditTrialSettingsView: View {
     @State private var toBeEdited: Int = -1
     @State private var confirmationShow: Bool = false
     @State private var isScreensSaveAlert: Bool = false
+    @State private var selectedColor = Color(red: 0.9882, green: 0.502, blue: 0.6471)
+    @State private var strokeWidth: Double = 5
 
     private var gridLayout = [GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
                               GridItem(.adaptive(minimum: 250)), GridItem(.fixed(25)),
@@ -41,7 +43,10 @@ struct EditTrialSettingsView: View {
                             Text(self.trialSettings[index].partCondition ?? "").tag(index)
                         }.onChange(of: self.partCondIndex) { newTrialSetting in
                             if partCondIndex != -1 {
-                                self.screens = self.trialSettings[self.partCondIndex].screenToTrialSettings?.array as! [Screen]
+                                let settings = self.trialSettings[self.partCondIndex]
+                                self.screens = settings.screenToTrialSettings?.array as! [Screen]
+                                self.selectedColor = Color(red: settings.strokeRed, green: settings.strokeGreen, blue: settings.strokeBlue)
+                                self.strokeWidth = settings.strokeWidth
                             } else {
                                 self.screens = []
                             }
@@ -69,7 +74,7 @@ struct EditTrialSettingsView: View {
                         .padding(.bottom, 50)
                 }
                 
-                Text("Trial Sequence").foregroundColor(Color.black).font(.system(size: 20.0))
+                Text("Trial Sequence").font(.system(size: 20.0))
                 ScrollView() {
                     LazyVGrid(columns:gridLayout) {
                         if (self.screens.count > 0) {
@@ -111,7 +116,6 @@ struct EditTrialSettingsView: View {
                                             .frame(width: 250, height: 185)
                                             .border(Color.black, width: 2)
                                     }
-                                
                                 }
                                 Text(self.screens[index].type == 0 ? " " : self.screens[index].media!.name!)
                                     .lineLimit(1)
@@ -140,6 +144,18 @@ struct EditTrialSettingsView: View {
                     RoundedRectangle(cornerRadius: 5)
                         .stroke(Color.red, lineWidth: self.isScreensSaveAlert ? 1 : 0)
                 )
+            }
+            HStack {
+                ColorPicker("Stroke Color", selection: $selectedColor)
+                    .frame(width: 160, alignment: .leading)
+                    .font(.system(size: 20.0))
+                Text("Stroke Width")
+                    .font(.system(size: 20.0))
+                    .padding(.leading, 50).padding(.trailing, 5)
+                TextField("", value: $strokeWidth, format: .number)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .frame(width: 100)
+                Spacer()
             }
             Spacer()
             if self.partCondIndex != -1 {
@@ -214,6 +230,11 @@ struct EditTrialSettingsView: View {
             if (self.partCondition != "") {
                 currSettings.partCondition = self.partCondition
             }
+            
+            currSettings.strokeRed = Double(UIColor(self.selectedColor).rgba.red)
+            currSettings.strokeGreen = Double(UIColor(self.selectedColor).rgba.green)
+            currSettings.strokeBlue = Double(UIColor(self.selectedColor).rgba.blue)
+            currSettings.strokeWidth = self.strokeWidth
             
             do {
                 try self.viewContext.save()

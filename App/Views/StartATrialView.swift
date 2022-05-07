@@ -24,6 +24,10 @@ private var currentImgView: UIImageView?
 private var currentVidLayer: AVPlayerLayer?
 private var isLast: Bool = false
 private var text: String = ""
+private var redVal: Double = 1
+private var greenVal: Double = 1
+private var blueVal: Double = 1
+private var widthVal: Double = 0
 //private var currentImage:
 
 struct StartATrialView: View {
@@ -59,7 +63,9 @@ struct StartATrialView: View {
                     Text("Participant Number").font(.system(size: 20.0))
                     Text("*").font(.system(size: 20.0)).foregroundColor(Color.red)
                 }
-                TextField("", text: $partNumber).textFieldStyle(.roundedBorder).focused($tfFocus)
+                TextField("", text: $partNumber)
+                    .textFieldStyle(.roundedBorder)
+                    .focused($tfFocus)
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(Color.red, lineWidth: self.isPartNumSaveAlert ? 1 : 0)
@@ -75,7 +81,9 @@ struct StartATrialView: View {
                         HStack {
                             Spacer()
                             VStack {
-                                Text("No conditions found.").font(.title).foregroundColor(Color.gray)
+                                Text("No conditions found.")
+                                    .font(.title)
+                                    .foregroundColor(Color.gray)
                                 Text("Please go back to Create Trial Settings to create a condition.")
                                     .font(.title)
                                     .foregroundColor(Color.gray)
@@ -91,7 +99,12 @@ struct StartATrialView: View {
                             Text(self.trialSettings[index].partCondition ?? "").tag(index)
                         }.onChange(of: self.partCondIndex) { newTrialSetting in
                             if partCondIndex != -1 {
-                                self.screens = self.trialSettings[self.partCondIndex].screenToTrialSettings?.array as! [Screen]
+                                let settings = self.trialSettings[self.partCondIndex]
+                                self.screens = settings.screenToTrialSettings?.array as! [Screen]
+                                redVal = settings.strokeRed
+                                greenVal = settings.strokeGreen
+                                blueVal = settings.strokeBlue
+                                widthVal = settings.strokeWidth
                             } else {
                                 self.screens = []
                             }
@@ -102,7 +115,7 @@ struct StartATrialView: View {
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(Color.red, lineWidth: self.isSeqSaveAlert ? 1 : 0)
                     )
-                    .padding(.bottom, 50)
+                    .padding(.bottom, 30)
                 }
             
                 Text("Trial Sequence").font(.system(size: 20.0))
@@ -121,22 +134,39 @@ struct StartATrialView: View {
                                             .resizable()
                                             .frame(width: 250, height: 185)
                                             .border(Color.black, width: 2)
-  
                                 }
                                 Text(self.screens[index].type == 0 ? " " : self.screens[index].media!.name!)
                                     .lineLimit(1)
                             }
-                            
                             Spacer()
                         }
                     }
                 }
+                HStack {
+                    Text("Stroke Color")
+                        .font(.system(size: 20.0))
+                        .padding(.trailing, 5)
+                    Circle()
+                        .fill(Color(red: redVal, green: greenVal, blue: blueVal))
+                        .frame(width: 30, height: 30)
+                        .padding(.trailing, 50)
+                    Text("Stroke Width")
+                        .font(.system(size: 20.0))
+                        .padding(.trailing, 5)
+                    Text(widthVal == 0 ? "" : String(widthVal))
+                        .font(.system(size: 20.0))
+                        .foregroundColor(Color.gray)
+                }
             }
-            
             HStack {
                 Spacer().frame(maxWidth: .infinity)
                 Button(action: {
                     tfFocus = false
+                    let settings = self.trialSettings[self.partCondIndex]
+                    redVal = settings.strokeRed
+                    greenVal = settings.strokeGreen
+                    blueVal = settings.strokeBlue
+                    widthVal = settings.strokeWidth
                     startTrial()
                 }, label: {
                     Text("Start Trial")
@@ -244,7 +274,7 @@ struct TrialView: View {
                         Spacer()
                     }.padding(10)
                     Spacer()
-                    Text(screens[screenIndex].instructions!)
+                    Text(screens[screenIndex].instructions!).font(.system(size: 20.0)).padding(50)
                     Spacer()
                 }
             } else if currType == 1 {
@@ -556,7 +586,7 @@ class ViewController: UIViewController {
     func setupPencilKit() {
         let canvasView = PKCanvasView(frame: self.view.bounds)
         cView = canvasView
-        canvasView.tool = PKInkingTool(.pen, color: UIColor(Color(red: 0.9882, green: 0.502, blue: 0.6471)), width:5)
+        canvasView.tool = PKInkingTool(.pen, color: UIColor(Color(red: redVal, green: greenVal, blue: blueVal)), width: CGFloat(widthVal))
         canvasView.delegate = self
         canvasView.drawingPolicy = .anyInput  // uncomment to test on anyput, comment for apple pencil
         canvasView.isOpaque = false
