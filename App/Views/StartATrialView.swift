@@ -36,6 +36,7 @@ struct StartATrialView: View {
     @State private var showEmptyMessage = false
     @State private var isPartNumSaveAlert: Bool = false
     @State private var isSeqSaveAlert: Bool = false
+    @State private var penColor = Color(red: 0.9882, green: 0.502, blue: 0.6471)
     @FocusState private var tfFocus: Bool
     @Environment(\.managedObjectContext) var viewContext
     @FetchRequest(entity: TrialSettings.entity(), sortDescriptors: [])
@@ -50,6 +51,10 @@ struct StartATrialView: View {
     init() {
         datForm.timeZone = TimeZone.current
         datForm.dateFormat = "MMM-dd-yyyy hh:mm a"
+    }
+    
+    func getPenColor() -> Color {
+        return self.penColor
     }
     
     var body: some View {
@@ -91,7 +96,9 @@ struct StartATrialView: View {
                             Text(self.trialSettings[index].partCondition ?? "").tag(index)
                         }.onChange(of: self.partCondIndex) { newTrialSetting in
                             if partCondIndex != -1 {
-                                self.screens = self.trialSettings[self.partCondIndex].screenToTrialSettings?.array as! [Screen]
+                                let settings = self.trialSettings[self.partCondIndex]
+                                self.screens = settings.screenToTrialSettings?.array as! [Screen]
+                                self.penColor = Color(red: settings.strokeRed, green: settings.strokeGreen, blue: settings.strokeBlue)
                             } else {
                                 self.screens = []
                             }
@@ -102,7 +109,7 @@ struct StartATrialView: View {
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(Color.red, lineWidth: self.isSeqSaveAlert ? 1 : 0)
                     )
-                    .padding(.bottom, 50)
+                    .padding(.bottom, 30)
                 }
             
                 Text("Trial Sequence").font(.system(size: 20.0))
@@ -244,7 +251,7 @@ struct TrialView: View {
                         Spacer()
                     }.padding(10)
                     Spacer()
-                    Text(screens[screenIndex].instructions!)
+                    Text(screens[screenIndex].instructions!).font(.system(size: 20.0)).padding(50)
                     Spacer()
                 }
             } else if currType == 1 {
@@ -556,7 +563,7 @@ class ViewController: UIViewController {
     func setupPencilKit() {
         let canvasView = PKCanvasView(frame: self.view.bounds)
         cView = canvasView
-        canvasView.tool = PKInkingTool(.pen, color: UIColor(Color(red: 0.9882, green: 0.502, blue: 0.6471)), width:5)
+        canvasView.tool = PKInkingTool(.pen, color: UIColor(StartATrialView().getPenColor()), width:5)
         canvasView.delegate = self
         canvasView.drawingPolicy = .anyInput  // uncomment to test on anyput, comment for apple pencil
         canvasView.isOpaque = false
