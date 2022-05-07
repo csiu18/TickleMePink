@@ -24,6 +24,10 @@ private var currentImgView: UIImageView?
 private var currentVidLayer: AVPlayerLayer?
 private var isLast: Bool = false
 private var text: String = ""
+private var redVal: Double?
+private var greenVal: Double?
+private var blueVal: Double?
+private var widthVal: Double?
 //private var currentImage:
 
 struct StartATrialView: View {
@@ -36,7 +40,6 @@ struct StartATrialView: View {
     @State private var showEmptyMessage = false
     @State private var isPartNumSaveAlert: Bool = false
     @State private var isSeqSaveAlert: Bool = false
-    @State private var penColor = Color(red: 0.9882, green: 0.502, blue: 0.6471)
     @FocusState private var tfFocus: Bool
     @Environment(\.managedObjectContext) var viewContext
     @FetchRequest(entity: TrialSettings.entity(), sortDescriptors: [])
@@ -51,10 +54,6 @@ struct StartATrialView: View {
     init() {
         datForm.timeZone = TimeZone.current
         datForm.dateFormat = "MMM-dd-yyyy hh:mm a"
-    }
-    
-    func getPenColor() -> Color {
-        return self.penColor
     }
     
     var body: some View {
@@ -98,7 +97,6 @@ struct StartATrialView: View {
                             if partCondIndex != -1 {
                                 let settings = self.trialSettings[self.partCondIndex]
                                 self.screens = settings.screenToTrialSettings?.array as! [Screen]
-                                self.penColor = Color(red: settings.strokeRed, green: settings.strokeGreen, blue: settings.strokeBlue)
                             } else {
                                 self.screens = []
                             }
@@ -144,6 +142,11 @@ struct StartATrialView: View {
                 Spacer().frame(maxWidth: .infinity)
                 Button(action: {
                     tfFocus = false
+                    let settings = self.trialSettings[self.partCondIndex]
+                    redVal = settings.strokeRed
+                    greenVal = settings.strokeGreen
+                    blueVal = settings.strokeBlue
+                    widthVal = settings.strokeWidth
                     startTrial()
                 }, label: {
                     Text("Start Trial")
@@ -563,7 +566,7 @@ class ViewController: UIViewController {
     func setupPencilKit() {
         let canvasView = PKCanvasView(frame: self.view.bounds)
         cView = canvasView
-        canvasView.tool = PKInkingTool(.pen, color: UIColor(StartATrialView().getPenColor()), width:5)
+        canvasView.tool = PKInkingTool(.pen, color: UIColor(Color(red: redVal!, green: greenVal!, blue: blueVal!)), width: CGFloat(widthVal!))
         canvasView.delegate = self
         canvasView.drawingPolicy = .anyInput  // uncomment to test on anyput, comment for apple pencil
         canvasView.isOpaque = false

@@ -30,7 +30,7 @@
         <attribute name="strokeBlue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="strokeGreen" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="strokeRed" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="strokeWidth" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="strokeWidth" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="screenToTrialSettings" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Screen" inverseName="trialSettings" inverseEntity="Screen"/>
     </entity>
     <elements>
