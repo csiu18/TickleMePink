@@ -1,41 +1,49 @@
 {
   "images" : [
     {
+      "filename" : "App Icon (40 × 40 px)-2.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
+      "filename" : "App Icon (60 × 60 px).png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
     },
     {
+      "filename" : "App Icon (58 × 58 px)-1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
+      "filename" : "App Icon (87 × 87 px).png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "29x29"
     },
     {
+      "filename" : "App Icon (80 × 80 px)-1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
+      "filename" : "App Icon (120 × 120 px).png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
+      "filename" : "App Icon (120 × 120 px)-1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
+      "filename" : "App Icon (180 × 180 px).png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "60x60"
@@ -89,11 +97,13 @@
       "size" : "76x76"
     },
     {
+      "filename" : "App Icon  (167 × 167 px).png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "83.5x83.5"
     },
     {
+      "filename" : "App Icon (1024 × 1024 px).png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"

@@ -15,7 +15,6 @@ extension View {
         let controller = UIHostingController(rootView: self)
          
         controller.view.frame = CGRect(x: 0, y: CGFloat(Int.max), width: 1, height: 1)
-        //UIApplication.shared.windows.first!.rootViewController?.view.addSubview(controller.view)
         let conScenes = UIApplication.shared.connectedScenes.first
         let windowSc = conScenes as? UIWindowScene
         windowSc?.keyWindow?.rootViewController?.view.addSubview(controller.view)
@@ -24,7 +23,7 @@ extension View {
         controller.view.bounds = CGRect(origin: .zero, size: size)
         controller.view.sizeToFit()
          
-        //converts UIView to UIImage: `.asImage()`
+        // converts UIView to UIImage: `.asImage()`
         let image = controller.view.asUIImage()
         controller.view.removeFromSuperview()
         return image
@@ -32,7 +31,7 @@ extension View {
 }
  
 extension UIView {
-//UIView to UIImage
+// UIView to UIImage
     public func asUIImage() -> UIImage {
         let renderer = UIGraphicsImageRenderer(bounds: bounds)
         return renderer.image { rendererContext in
@@ -88,7 +87,7 @@ struct ImagePicker: UIViewControllerRepresentable {
                     let imageURL = info[UIImagePickerController.InfoKey.imageURL] as? URL
                     let imageData = NSData(contentsOf: imageURL!)
                     
-                    //Creates Date-Based URL
+                    // Creates Date-Based URL
                     let today = Date()
                     let formatter = DateFormatter()
                     formatter.dateFormat = "HHmmssEdMMMy"
@@ -101,8 +100,8 @@ struct ImagePicker: UIViewControllerRepresentable {
                         let fileManager = FileManager.default
                         let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
                         //  Create subdirectory
-                        //let directoryURL = appSupportURL.appendingPathComponent("com.myCompany.myApp")
-                        //try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+                        // let directoryURL = appSupportURL.appendingPathComponent("com.myCompany.myApp")
+                        // try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
                         //  Create document
                         let documentURL = appSupportURL.appendingPathComponent (dataPath)
                         url = documentURL as NSURL
@@ -121,7 +120,7 @@ struct ImagePicker: UIViewControllerRepresentable {
                     let videoURL = info[UIImagePickerController.InfoKey.mediaURL] as? URL
                     let videoData = NSData(contentsOf: videoURL!)
                     
-                    //Creates Date-Based URL
+                    // Creates Date-Based URL
                     let today = Date()
                     let formatter = DateFormatter()
                     formatter.dateFormat = "HHmmssEdMMMy"
@@ -130,13 +129,13 @@ struct ImagePicker: UIViewControllerRepresentable {
                     
                     do
                     {
-                        //  Find Application Support directory
+                        // Find Application Support directory
                         let fileManager = FileManager.default
                         let appSupportURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-                        //  Create subdirectory
-                        //let directoryURL = appSupportURL.appendingPathComponent("com.myCompany.myApp")
-                        //try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
-                        //  Create document
+                        // Create subdirectory
+                        // let directoryURL = appSupportURL.appendingPathComponent("com.myCompany.myApp")
+                        // try fileManager.createDirectory (at: directoryURL, withIntermediateDirectories: true, attributes: nil)
+                        // Create document
                         let documentURL = appSupportURL.appendingPathComponent (dataPath)
                         url = documentURL as NSURL
                         try videoData?.write (to: documentURL)
@@ -162,13 +161,11 @@ struct ImagePicker: UIViewControllerRepresentable {
             } */
             
             presentationMode.dismiss()
- 
         }
  
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
             presentationMode.dismiss()
         }
- 
     }
  
     func makeCoordinator() -> Coordinator {
@@ -186,7 +183,5 @@ struct ImagePicker: UIViewControllerRepresentable {
  
     func updateUIViewController(_ uiViewController: UIImagePickerController,
                                 context: UIViewControllerRepresentableContext<ImagePicker>) {
- 
     }
- 
 }

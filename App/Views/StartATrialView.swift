@@ -28,16 +28,15 @@ private var redVal: Double = 1
 private var greenVal: Double = 1
 private var blueVal: Double = 1
 private var widthVal: Double = 0
-//private var currentImage:
 
 struct StartATrialView: View {
-    @State private var presentingTrial = false
-    @State private var partCondIndex = -1
-    @State private var screens:[Screen] = []
-    @State private var screenLength = -1
-    @State private var screenIndex = 0
-    @State private var partNumber = ""
-    @State private var showEmptyMessage = false
+    @State private var presentingTrial: Bool = false
+    @State private var partCondIndex: Int = -1
+    @State private var screens: [Screen] = []
+    @State private var screenLength: Int = -1
+    @State private var screenIndex: Int = 0
+    @State private var partNumber: String = ""
+    @State private var showEmptyMessage: Bool = false
     @State private var isPartNumSaveAlert: Bool = false
     @State private var isSeqSaveAlert: Bool = false
     @FocusState private var tfFocus: Bool
@@ -630,7 +629,6 @@ class ViewController: UIViewController {
         } else if !currentMediaBool! {
             // [VIDEO]
             print("CURRENTMEDIAURL")
-            print(currentMediaURL)
             let player = AVPlayer(url: documentURL)
             //let player = AVPlayer(url: URL(string:currentMediaURL!)!)
             let vidLayer = AVPlayerLayer(player: player)
