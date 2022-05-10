@@ -23,6 +23,10 @@ extension UIColor {
 struct CreateTrialSettingsView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @FetchRequest(
+        entity: TrialSettings.entity(),
+        sortDescriptors: [NSSortDescriptor(key: "partCondition", ascending: true)]
+    ) var trialSettings: FetchedResults<TrialSettings>
    
     @State private var isCreateModalPresented = false
     @State private var isEditModalPresented = false
@@ -185,7 +189,8 @@ struct CreateTrialSettingsView: View {
     }
     
     func saveSequence() {
-        if (self.partCondition == "") {
+        let partCondExists = trialSettings.firstIndex(where: {$0.partCondition == self.partCondition})
+        if (self.partCondition == "" || partCondExists != nil) {
             self.isPartCondSaveAlert = true
         }
         if (self.screens.count == 0) {

@@ -24,6 +24,7 @@ struct EditTrialSettingsView: View {
     @State private var toBeEdited: Int = -1
     @State private var confirmationShow: Bool = false
     @State private var isScreensSaveAlert: Bool = false
+    @State private var isPartCondSaveAlert: Bool = false
     @State private var selectedColor = Color(red: 0.9882, green: 0.502, blue: 0.6471)
     @State private var strokeWidth: Double = 5
 
@@ -71,6 +72,10 @@ struct EditTrialSettingsView: View {
                     Text("New Participant Condition").font(.system(size: 20.0))
                     TextField("", text:$partCondition)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                                .stroke(Color.red, lineWidth: self.isPartCondSaveAlert ? 1 : 0)
+                        )
                         .padding(.bottom, 50)
                 }
                 
@@ -227,6 +232,13 @@ struct EditTrialSettingsView: View {
             let orderedSet = NSOrderedSet(array: self.screens)
             currSettings.screenToTrialSettings = orderedSet
             
+            let partCondExists = trialSettings.firstIndex(where: {$0.partCondition == self.partCondition})
+            if (partCondExists != nil) {
+                self.isPartCondSaveAlert = true
+                return
+            }
+            
+            self.isPartCondSaveAlert = false
             if (self.partCondition != "") {
                 currSettings.partCondition = self.partCondition
             }
